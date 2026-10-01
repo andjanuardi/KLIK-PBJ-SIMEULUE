@@ -473,7 +473,7 @@
         const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv`;
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbziNsZ8R2S_Tg2LdQv3zK1CkRTzVSvJTzLyiqCYJLAyhF84QjtJCSxpZXbA3oA6dyer/exec';
 
-        let globalDataStore = []; // Memori penampung data spreadsheet
+        let globalDataStore = [];
 
         window.addEventListener('DOMContentLoaded', function() {
             loadDataFromSheet();
@@ -636,14 +636,15 @@
 
                         total++;
                         
-                        const noTiket = row[1] || '-';                      
-                        const tglMasuk = row[2] || '-';                     
-                        const pemohonRaw = (row[3] || '').trim();          
-                        const skpk = (row[7] || '-').trim();               
-                        const jenis = (row[9] || '-').trim();              
-                        const permasalahan = (row[11] || '-').trim();       
-                        const jawaban = (row[12] || 'Belum ada jawaban').trim(); 
-                        const status = (row[13] || '').trim().toLowerCase();     
+                        // KOREKSI INDEX SESUAI KODE SHEETS TERBARU
+                        const noTiket = row[1] || '-';                       // Kolom B
+                        const tglMasuk = row[2] || '-';                      // Kolom C
+                        const pemohonRaw = (row[3] || '').trim();           // Kolom D
+                        const skpk = (row[7] || '-').trim();                // Kolom H
+                        const jenis = (row[9] || '-').trim();               // Kolom J (Jenis Konsultasi)
+                        const permasalahan = (row[12] || '-').trim();        // Kolom M (Uraian Singkat Permasalahan)
+                        const status = (row[17] || '').trim().toLowerCase(); // Kolom R (Status)
+                        const jawaban = (row[19] || 'Belum ada jawaban').trim(); // Kolom T (Hasil/Tindak Lanjut)
 
                         const pemohon = pemohonRaw !== '' ? pemohonRaw : (skpk !== '-' ? skpk : 'Pemohon');
 
@@ -658,7 +659,6 @@
                             }
                         });
 
-                        // Simpan data di array lokal untuk popup modal detail
                         const dataIndex = globalDataStore.length;
                         globalDataStore.push({
                             noTiket, tglMasuk, pemohon, skpk, jenis, permasalahan, jawaban, status
