@@ -3,568 +3,514 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KLIK-PBJ Kabupaten Simeulue</title>
+    <title>KLIK-PBJ SIMEULUE - Klinik Layanan Integrasi Konsultasi PBJ</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome CDN -->
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #0b132b;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .bg-card { background-color: #1c2541; }
+        .bg-btn-green { background-color: #06d6a0; }
+        .bg-btn-green:hover { background-color: #05b88a; }
+        .text-gold { color: #ffd166; }
+    </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen font-sans">
+<body class="p-4 md:p-8 min-h-screen">
 
-    <!-- Container Utama -->
-    <div class="max-w-7xl mx-auto px-4 py-8 space-y-8">
-
-        <!-- HEADER -->
-        <header class="text-center space-y-2">
-            <h1 class="text-3xl md:text-4xl font-extrabold text-amber-400 tracking-wide">
-                KLIK-PBJ KABUPATEN SIMEULUE
-            </h1>
-            <p class="text-slate-400 text-sm md:text-base">
-                Layanan Konsultasi & Pengaduan Pengadaan Barang/Jasa Pemerintah
-            </p>
-        </header>
-
-        <!-- KARTU BIDANG LENGKAP -->
-        <div class="space-y-3">
-            <h2 class="text-sm font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2">
-                <i class="fas fa-paper-plane"></i> Layanan Konsultasi Per Bidang
-            </h2>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                
-                <!-- 1. Pengadaan Barang -->
-                <div class="bg-emerald-500 rounded-2xl p-4 text-slate-950 flex flex-col justify-between space-y-3 shadow-lg">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-slate-950/20 flex items-center justify-center shrink-0">
-                            <i class="fas fa-box text-xl"></i>
-                        </div>
-                        <span class="font-extrabold text-base">Pengadaan Barang</span>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2 pt-2">
-                        <button onclick="openPortalTimByBidang('Barang')" class="bg-slate-950 hover:bg-slate-800 text-amber-400 text-xs font-bold py-2 px-2 rounded-xl transition-all flex items-center justify-center gap-1 shadow">
-                            <i class="fas fa-pen-to-square"></i> Jawab Tiket
-                        </button>
-                        <button onclick="filterTableByBidang('Barang')" class="bg-slate-950/20 hover:bg-slate-950/40 text-slate-950 text-xs font-extrabold py-2 px-2 rounded-xl transition-all flex items-center justify-center gap-1 border border-slate-950/30">
-                            <i class="fas fa-eye"></i> Lihat Jawaban
-                        </button>
-                    </div>
-                </div>
-
-                <!-- 2. Jasa Konstruksi -->
-                <div class="bg-emerald-500 rounded-2xl p-4 text-slate-950 flex flex-col justify-between space-y-3 shadow-lg">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-slate-950/20 flex items-center justify-center shrink-0">
-                            <i class="fas fa-hard-hat text-xl"></i>
-                        </div>
-                        <span class="font-extrabold text-base">Jasa Konstruksi</span>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2 pt-2">
-                        <button onclick="openPortalTimByBidang('Konstruksi')" class="bg-slate-950 hover:bg-slate-800 text-amber-400 text-xs font-bold py-2 px-2 rounded-xl transition-all flex items-center justify-center gap-1 shadow">
-                            <i class="fas fa-pen-to-square"></i> Jawab Tiket
-                        </button>
-                        <button onclick="filterTableByBidang('Konstruksi')" class="bg-slate-950/20 hover:bg-slate-950/40 text-slate-950 text-xs font-extrabold py-2 px-2 rounded-xl transition-all flex items-center justify-center gap-1 border border-slate-950/30">
-                            <i class="fas fa-eye"></i> Lihat Jawaban
-                        </button>
-                    </div>
-                </div>
-
-                <!-- 3. Jasa Konsultansi -->
-                <div class="bg-emerald-500 rounded-2xl p-4 text-slate-950 flex flex-col justify-between space-y-3 shadow-lg">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-slate-950/20 flex items-center justify-center shrink-0">
-                            <i class="fas fa-comments text-xl"></i>
-                        </div>
-                        <span class="font-extrabold text-base">Jasa Konsultansi</span>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2 pt-2">
-                        <button onclick="openPortalTimByBidang('Konsultansi')" class="bg-slate-950 hover:bg-slate-800 text-amber-400 text-xs font-bold py-2 px-2 rounded-xl transition-all flex items-center justify-center gap-1 shadow">
-                            <i class="fas fa-pen-to-square"></i> Jawab Tiket
-                        </button>
-                        <button onclick="filterTableByBidang('Konsultansi')" class="bg-slate-950/20 hover:bg-slate-950/40 text-slate-950 text-xs font-extrabold py-2 px-2 rounded-xl transition-all flex items-center justify-center gap-1 border border-slate-950/30">
-                            <i class="fas fa-eye"></i> Lihat Jawaban
-                        </button>
-                    </div>
-                </div>
-
-                <!-- 4. Jasa Lainnya -->
-                <div class="bg-emerald-500 rounded-2xl p-4 text-slate-950 flex flex-col justify-between space-y-3 shadow-lg">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-slate-950/20 flex items-center justify-center shrink-0">
-                            <i class="fas fa-gears text-xl"></i>
-                        </div>
-                        <span class="font-extrabold text-base">Jasa Lainnya</span>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2 pt-2">
-                        <button onclick="openPortalTimByBidang('Lainnya')" class="bg-slate-950 hover:bg-slate-800 text-amber-400 text-xs font-bold py-2 px-2 rounded-xl transition-all flex items-center justify-center gap-1 shadow">
-                            <i class="fas fa-pen-to-square"></i> Jawab Tiket
-                        </button>
-                        <button onclick="filterTableByBidang('Lainnya')" class="bg-slate-950/20 hover:bg-slate-950/40 text-slate-950 text-xs font-extrabold py-2 px-2 rounded-xl transition-all flex items-center justify-center gap-1 border border-slate-950/30">
-                            <i class="fas fa-eye"></i> Lihat Jawaban
-                        </button>
-                    </div>
-                </div>
-
-                <!-- 5. Pasca Kontrak -->
-                <div class="bg-emerald-500 rounded-2xl p-4 text-slate-950 flex flex-col justify-between space-y-3 shadow-lg md:col-span-2 lg:col-span-1">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-slate-950/20 flex items-center justify-center shrink-0">
-                            <i class="fas fa-handshake text-xl"></i>
-                        </div>
-                        <span class="font-extrabold text-base">Pasca Kontrak</span>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2 pt-2">
-                        <button onclick="openPortalTimByBidang('Pasca')" class="bg-slate-950 hover:bg-slate-800 text-amber-400 text-xs font-bold py-2 px-2 rounded-xl transition-all flex items-center justify-center gap-1 shadow">
-                            <i class="fas fa-pen-to-square"></i> Jawab Tiket
-                        </button>
-                        <button onclick="filterTableByBidang('Pasca')" class="bg-slate-950/20 hover:bg-slate-950/40 text-slate-950 text-xs font-extrabold py-2 px-2 rounded-xl transition-all flex items-center justify-center gap-1 border border-slate-950/30">
-                            <i class="fas fa-eye"></i> Lihat Jawaban
-                        </button>
-                    </div>
-                </div>
-
+    <!-- HEADER / BANNER -->
+    <header class="bg-card rounded-xl p-4 md:p-6 mb-6 shadow-lg flex flex-col md:flex-row items-center justify-between gap-4 border border-slate-700">
+        <div class="flex items-center gap-4">
+            <div id="banner-logo-container" class="w-16 h-16 bg-slate-800 rounded-lg flex items-center justify-center overflow-hidden border border-slate-600">
+                <i class="fas fa-building-columns text-2xl text-gold hidden" id="default-logo-icon"></i>
+                <img id="custom-logo" src="logo.png" onerror="this.style.display='none'; document.getElementById('default-logo-icon').classList.remove('hidden');" alt="Logo Header" class="w-full h-full object-cover">
+            </div>
+            <div>
+                <h1 class="text-xl md:text-2xl font-bold text-gold tracking-wide">KLIK-PBJ SIMEULUE</h1>
+                <p class="text-sm md:text-base text-slate-300 font-medium">Klinik Layanan Integrasi Konsultasi Pengadaan Barang dan Jasa</p>
+                <p class="text-xs text-emerald-400 font-semibold">Kabupaten Simeulue</p>
             </div>
         </div>
-
-        <!-- FORMULIR GOOGLE FORM AWAL (SEPERTI SEMULA) -->
-        <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-4 md:p-6 space-y-4 shadow-xl">
-            <h2 class="text-lg font-bold text-amber-400 flex items-center gap-2">
-                <i class="fas fa-file-pen"></i> Formulir Pengajuan Konsultasi
-            </h2>
-            <div class="w-full overflow-hidden rounded-xl border border-slate-700 bg-white">
-                <!-- Masukkan link Google Form Anda di attribute src di bawah ini -->
-                <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSc-GANTI_DENGAN_LINK_FORM_ANDA/viewform?embedded=true" 
-                        width="100%" 
-                        height="800" 
-                        frameborder="0" 
-                        marginheight="0" 
-                        marginwidth="0">
-                        Memuat Formulir Google...
-                </iframe>
-            </div>
+        <div class="bg-slate-900/80 px-4 py-2 rounded-lg border border-amber-500/30 flex items-center gap-2">
+            <i class="fas fa-shield-halved text-gold"></i>
+            <span class="text-xs md:text-sm font-semibold text-slate-200">Melayani Dengan Integritas, Solusi Untuk Negeri</span>
         </div>
+    </header>
 
-        <!-- STATISTIK & REKAPITULASI -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="bg-slate-800/80 border border-slate-700/60 p-4 rounded-xl flex items-center justify-between">
-                <div>
-                    <p class="text-xs text-slate-400 font-semibold uppercase">Total Konsultasi</p>
-                    <h3 id="stat-total" class="text-2xl font-bold text-slate-100">0</h3>
-                </div>
-                <div class="w-10 h-10 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center">
-                    <i class="fas fa-folder-open text-lg"></i>
-                </div>
-            </div>
-            <div class="bg-slate-800/80 border border-slate-700/60 p-4 rounded-xl flex items-center justify-between">
-                <div>
-                    <p class="text-xs text-slate-400 font-semibold uppercase">Selesai</p>
-                    <h3 id="stat-selesai" class="text-2xl font-bold text-emerald-400">0</h3>
-                </div>
-                <div class="w-10 h-10 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
-                    <i class="fas fa-check-circle text-lg"></i>
-                </div>
-            </div>
-            <div class="bg-slate-800/80 border border-slate-700/60 p-4 rounded-xl flex items-center justify-between">
-                <div>
-                    <p class="text-xs text-slate-400 font-semibold uppercase">Dalam Proses</p>
-                    <h3 id="stat-proses" class="text-2xl font-bold text-amber-400">0</h3>
-                </div>
-                <div class="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center">
-                    <i class="fas fa-clock text-lg"></i>
-                </div>
-            </div>
-        </div>
+    <!-- MAIN CONTENT -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
 
-        <!-- TABEL DATA JAWABAN KONSULTASI -->
-        <div id="sectionTabel" class="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-4 md:p-6 space-y-4">
-            
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
-                <h2 class="text-lg font-bold text-amber-400 flex items-center gap-2">
-                    <i class="fas fa-list-check"></i> Daftar Tiket Konsultasi
+        <!-- LEFT SIDEBAR: Visi, Pengaturan & Rekapitulasi -->
+        <div class="lg:col-span-4 flex flex-col gap-6">
+
+            <!-- VISI KABUPATEN SIMEULUE 2030 -->
+            <div class="p-4 bg-card border border-slate-700 rounded-xl text-center shadow-lg">
+                <span class="text-xs text-slate-400 uppercase tracking-wider block mb-1">
+                    Visi Kabupaten Simeulue Tahun 2030
+                </span>
+                <p class="text-sm font-semibold text-sky-400 italic">
+                    "Mewujudkan Simeulue yang bermartabat & pusat pertumbuhan ekonomi biru."
+                </p>
+            </div>
+
+            <!-- PENGATURAN BANNER -->
+            <div class="bg-card rounded-xl p-5 shadow-lg border border-slate-700">
+                <h2 class="text-gold font-bold text-sm uppercase tracking-wider mb-3 flex items-center gap-2">
+                    <i class="fas fa-image"></i> Pengaturan Banner
                 </h2>
+                <div class="bg-slate-900/60 p-3 rounded-lg border border-slate-700">
+                    <label class="block text-xs font-semibold text-slate-300 mb-2">Ganti Gambar Banner Header:</label>
+                    <input type="file" id="banner-upload" accept="image/*" class="block w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-amber-500 file:text-slate-900 hover:file:bg-amber-400 cursor-pointer">
+                </div>
+            </div>
 
-                <div class="flex items-center gap-2">
-                    <button onclick="filterTableByBidang('')" class="text-xs bg-slate-700 hover:bg-slate-600 px-3 py-2 rounded-xl text-slate-200">
-                        Reset Filter
-                    </button>
-                    <div class="relative w-full md:w-72">
-                        <input type="text" id="inputSearch" onkeyup="filterTable()" placeholder="Cari nomor tiket, SKPK..." 
-                            class="w-full bg-slate-900/90 border border-slate-700 text-xs text-slate-200 rounded-xl px-3 py-2 pl-9 focus:outline-none focus:border-amber-400">
-                        <i class="fas fa-search absolute left-3 top-2.5 text-slate-500 text-xs"></i>
+            <!-- REKAPITULASI LAYANAN -->
+            <div class="bg-card rounded-xl p-5 shadow-lg border border-slate-700">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-gold font-bold text-sm uppercase tracking-wider flex items-center gap-2">
+                        <i class="fas fa-chart-line"></i> Rekapitulasi Layanan
+                    </h2>
+                    <span id="loading-indicator" class="text-xs text-emerald-400 animate-pulse hidden">
+                        <i class="fas fa-sync fa-spin"></i> Sync Database...
+                    </span>
+                </div>
+
+                <!-- CARDS RINGKASAN -->
+                <div class="grid grid-cols-2 gap-3 mb-5">
+                    <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-700 text-center">
+                        <p class="text-[10px] uppercase font-bold text-slate-400">Total</p>
+                        <p id="stat-total" class="text-2xl font-extrabold text-blue-400 my-1">0</p>
+                        <p class="text-[9px] text-slate-400">Seluruh Masuk</p>
+                    </div>
+                    <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-700 text-center">
+                        <p class="text-[10px] uppercase font-bold text-slate-400">Selesai</p>
+                        <p id="stat-selesai" class="text-2xl font-extrabold text-emerald-400 my-1">0</p>
+                        <p class="text-[9px] text-slate-400">Telah Ditangani</p>
+                    </div>
+                    <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-700 text-center">
+                        <p class="text-[10px] uppercase font-bold text-slate-400">Proses</p>
+                        <p id="stat-proses" class="text-2xl font-extrabold text-amber-400 my-1">0</p>
+                        <p class="text-[9px] text-slate-400">Sedang Ditangani</p>
+                    </div>
+                    <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-700 text-center">
+                        <p class="text-[10px] uppercase font-bold text-slate-400">Rata-Rata</p>
+                        <p id="stat-rata" class="text-2xl font-extrabold text-purple-400 my-1">1,5</p>
+                        <p class="text-[9px] text-slate-400">Hari Layanan</p>
                     </div>
                 </div>
+
+                <!-- TABEL REKAP 5 JENIS LAYANAN -->
+                <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Rekap 5 Jenis Layanan</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-xs text-left border-collapse">
+                        <thead>
+                            <tr class="text-slate-400 border-b border-slate-700">
+                                <th class="py-2">Layanan</th>
+                                <th class="py-2 text-center">Total</th>
+                                <th class="py-2 text-center text-emerald-400">Selesai</th>
+                                <th class="py-2 text-center text-amber-400">Proses</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800/60 font-medium">
+                            <tr>
+                                <td class="py-2 flex items-center gap-1.5"><i class="fas fa-box text-emerald-400"></i> Barang</td>
+                                <td id="tot-barang" class="text-center font-bold">0</td>
+                                <td id="sel-barang" class="text-center text-emerald-400 font-bold">0</td>
+                                <td id="pro-barang" class="text-center text-amber-400 font-bold">0</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 flex items-center gap-1.5"><i class="fas fa-hard-hat text-emerald-400"></i> Konstruksi</td>
+                                <td id="tot-konstruksi" class="text-center font-bold">0</td>
+                                <td id="sel-konstruksi" class="text-center text-emerald-400 font-bold">0</td>
+                                <td id="pro-konstruksi" class="text-center text-amber-400 font-bold">0</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 flex items-center gap-1.5"><i class="fas fa-comments text-emerald-400"></i> Konsultansi</td>
+                                <td id="tot-konsultansi" class="text-center font-bold">0</td>
+                                <td id="sel-konsultansi" class="text-center text-emerald-400 font-bold">0</td>
+                                <td id="pro-konsultansi" class="text-center text-amber-400 font-bold">0</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 flex items-center gap-1.5"><i class="fas fa-gears text-emerald-400"></i> Jasa Lainnya</td>
+                                <td id="tot-lainnya" class="text-center font-bold">0</td>
+                                <td id="sel-lainnya" class="text-center text-emerald-400 font-bold">0</td>
+                                <td id="pro-lainnya" class="text-center text-amber-400 font-bold">0</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 flex items-center gap-1.5"><i class="fas fa-handshake text-emerald-400"></i> Pasca Kontrak</td>
+                                <td id="tot-pascakontrak" class="text-center font-bold">0</td>
+                                <td id="sel-pascakontrak" class="text-center text-emerald-400 font-bold">0</td>
+                                <td id="pro-pascakontrak" class="text-center text-amber-400 font-bold">0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT CONTENT -->
+        <div class="lg:col-span-8 flex flex-col gap-6">
+
+            <!-- AJUKAN KONSULTASI -->
+            <div>
+                <h2 class="text-gold font-bold text-sm uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <i class="fas fa-paper-plane"></i> Ajukan Konsultasi
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button onclick="openForm('Pengadaan Barang')" class="bg-btn-green hover:brightness-110 text-slate-900 font-bold p-4 rounded-xl shadow-lg flex items-center gap-4 transition-all transform hover:-translate-y-1">
+                        <div class="bg-slate-900/20 p-3 rounded-lg text-2xl"><i class="fas fa-box"></i></div>
+                        <span class="text-base font-extrabold text-left">Pengadaan Barang</span>
+                    </button>
+                    <button onclick="openForm('Jasa Konstruksi')" class="bg-btn-green hover:brightness-110 text-slate-900 font-bold p-4 rounded-xl shadow-lg flex items-center gap-4 transition-all transform hover:-translate-y-1">
+                        <div class="bg-slate-900/20 p-3 rounded-lg text-2xl"><i class="fas fa-hard-hat"></i></div>
+                        <span class="text-base font-extrabold text-left">Jasa Konstruksi</span>
+                    </button>
+                    <button onclick="openForm('Jasa Konsultasi')" class="bg-btn-green hover:brightness-110 text-slate-900 font-bold p-4 rounded-xl shadow-lg flex items-center gap-4 transition-all transform hover:-translate-y-1">
+                        <div class="bg-slate-900/20 p-3 rounded-lg text-2xl"><i class="fas fa-comments"></i></div>
+                        <span class="text-base font-extrabold text-left">Jasa Konsultasi</span>
+                    </button>
+                    <button onclick="openForm('Jasa Lainnya')" class="bg-btn-green hover:brightness-110 text-slate-900 font-bold p-4 rounded-xl shadow-lg flex items-center gap-4 transition-all transform hover:-translate-y-1">
+                        <div class="bg-slate-900/20 p-3 rounded-lg text-2xl"><i class="fas fa-gears"></i></div>
+                        <span class="text-base font-extrabold text-left">Jasa Lainnya</span>
+                    </button>
+                    <button onclick="openForm('Pasca Kontrak')" class="md:col-span-2 bg-btn-green hover:brightness-110 text-slate-900 font-bold p-4 rounded-xl shadow-lg flex items-center gap-4 transition-all transform hover:-translate-y-1">
+                        <div class="bg-slate-900/20 p-3 rounded-lg text-2xl"><i class="fas fa-handshake"></i></div>
+                        <span class="text-base font-extrabold text-left">Pasca Kontrak</span>
+                    </button>
+                </div>
             </div>
 
-            <div id="loading-indicator" class="text-center py-8 text-amber-400 text-sm font-semibold flex items-center justify-center gap-2">
-                <i class="fas fa-spinner fa-spin text-lg"></i> Memuat data dari Google Sheets...
-            </div>
-
-            <div class="overflow-x-auto rounded-xl border border-slate-700/50">
-                <table class="w-full text-left text-xs md:text-sm">
-                    <thead class="bg-slate-950/80 text-amber-400 uppercase font-semibold border-b border-slate-700/60">
-                        <tr>
-                            <th class="p-3">No. Tiket</th>
-                            <th class="p-3">Pemohon</th>
-                            <th class="p-3">Jenis Konsultasi</th>
-                            <th class="p-3">Uraian Permasalahan</th>
-                            <th class="p-3 text-center">Jawaban Tim</th>
-                            <th class="p-3 text-center">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="bodyTabelJawaban" class="divide-y divide-slate-800 text-slate-200">
-                    </tbody>
-                </table>
+            <!-- INFORMASI & DOKUMEN -->
+            <div>
+                <h2 class="text-gold font-bold text-sm uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <i class="fas fa-folder-open"></i> Informasi & Dokumen
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <a href="https://drive.google.com/drive/folders/19mZ1cYDL49DgH_HG2Vh0T_P3Nsj1DX6M?usp=sharing" target="_blank" class="bg-card hover:border-amber-500/50 border border-slate-700 p-4 rounded-xl shadow-lg flex items-center justify-center gap-3 transition-all">
+                        <i class="fas fa-gavel text-gold text-xl"></i>
+                        <span class="font-bold text-sm text-slate-200">Dasar Hukum PBJ</span>
+                    </a>
+                    <a href="#" class="bg-card hover:border-amber-500/50 border border-slate-700 p-4 rounded-xl shadow-lg flex items-center justify-center gap-3 transition-all">
+                        <i class="fas fa-file-lines text-gold text-xl"></i>
+                        <span class="font-bold text-sm text-slate-200">Template Dokumen PBJ</span>
+                    </a>
+                </div>
             </div>
 
         </div>
-
     </div>
 
-    <!-- PORTAL MENJAWAB UNTUK TIM KONSULTASI -->
-    <div id="modalPortalTim" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-slate-900 border border-amber-500/30 rounded-2xl max-w-xl w-full p-6 space-y-5 shadow-2xl relative">
-            
-            <button onclick="closePortalTimModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
-                <i class="fas fa-times text-xl"></i>
-            </button>
-
-            <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
-                <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
-                    <i class="fas fa-pen-to-square text-lg"></i>
-                </div>
-                <div>
-                    <h3 class="text-lg font-bold text-amber-400">Portal Menjawab Tim PBJ</h3>
-                    <p id="labelBidangAktif" class="text-xs text-slate-400">Bidang: -</p>
-                </div>
+    <!-- KOTAK DISCLAIMER -->
+    <div class="bg-slate-900/90 border-l-4 border-amber-500 rounded-r-xl p-4 mb-6 shadow-lg">
+        <div class="flex items-start gap-3">
+            <i class="fas fa-triangle-exclamation text-amber-400 text-lg mt-0.5"></i>
+            <div>
+                <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wide mb-1">Disclaimer:</h3>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    Tanggapan Tim KLIK-PBJ bersifat konsultatif dan merupakan bahan pertimbangan, berdasarkan informasi dan dokumen yang disampaikan pada saat konsultasi. Tanggapan ini tidak mengambil alih kewenangan maupun tanggung jawab pejabat yang berwenang. Pihak yang berkonsultasi dapat memiliki pendapat berbeda dan wajib memastikan keputusan yang diambil sesuai ketentuan peraturan perundang-undangan. Segala keputusan, tindakan, dan konsekuensi atas pelaksanaannya menjadi tanggung jawab pihak/pejabat yang berwenang.
+                </p>
             </div>
-
-            <!-- STEP 1: PIN OTENTIKASI -->
-            <div id="stepVerifikasiPin" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Masukkan PIN Otentikasi Tim:</label>
-                    <input type="password" id="inputPinTim" placeholder="Ketik PIN Khusus Tim..." class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:border-amber-400 focus:outline-none">
-                </div>
-
-                <button onclick="verifikasiPinTim()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition-all">
-                    Masuk Portal Jawab
-                </button>
-            </div>
-
-            <!-- STEP 2: FORM PILIH TIKET & INPUT JAWABAN -->
-            <div id="stepJawabTiket" class="space-y-4 hidden">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Pilih Tiket Konsultasi Pending:</label>
-                    <select id="selectTiketProses" onchange="loadDetailTiketPilihan()" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-sm text-amber-300 font-bold">
-                    </select>
-                </div>
-
-                <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700/60 text-xs space-y-1">
-                    <p class="text-slate-400 font-semibold">Pemohon: <span id="detailPemohonTim" class="text-slate-200">-</span></p>
-                    <p class="text-slate-400 font-semibold">Uraian Permasalahan:</p>
-                    <p id="detailUraianTim" class="text-slate-300 italic bg-slate-900/60 p-2 rounded border border-slate-800 max-h-24 overflow-y-auto">-</p>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Petugas / Tim Konsultasi:</label>
-                    <input type="text" id="inputNamaTim" placeholder="Contoh: Agun, Dewi, Juan" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-amber-400 mb-1">Tanggapan / Jawaban Tim KLIK-PBJ:</label>
-                    <textarea id="inputTextJawabanTim" rows="4" placeholder="Ketikkan jawaban resmi di sini..." class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:border-amber-400 focus:outline-none"></textarea>
-                </div>
-
-                <button onclick="kirimJawabanTim()" id="btnKirimJawaban" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-extrabold py-3 rounded-xl text-xs transition-all flex items-center justify-center gap-2">
-                    <i class="fas fa-paper-plane"></i> Kirim Jawaban Ke Google Sheets
-                </button>
-            </div>
-
         </div>
     </div>
 
-    <!-- DETAIL JAWABAN (UNTUK MASYARAKAT) -->
-    <div id="modalDetail" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-slate-900 border border-slate-700/80 rounded-2xl max-w-2xl w-full p-6 space-y-5 shadow-2xl relative">
-            
-            <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
-                <i class="fas fa-times text-xl"></i>
-            </button>
+    <!-- SEKSI TABEL JAWABAN KONSULTASI PUBLIK -->
+    <section id="jawaban-publik" class="bg-card rounded-xl p-5 shadow-lg border border-slate-700 mb-8">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-5">
+            <div>
+                <h2 class="text-gold font-bold text-sm uppercase tracking-wider flex items-center gap-2">
+                    <i class="fas fa-comments-dollar"></i> Jawaban Konsultasi Publik
+                </h2>
+                <p class="text-xs text-slate-400 mt-1">Daftar pertanyaan dan jawaban resmi (Live Update dari Register Tiket)</p>
+            </div>
+            <input type="text" id="searchJawaban" onkeyup="filterJawaban()" placeholder="Cari nomor tiket, SKPK, atau kata kunci..." class="w-full md:w-72 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400">
+        </div>
 
-            <div class="flex items-start gap-3">
-                <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
-                    <i class="fas fa-comment-dots text-lg"></i>
+        <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-900/80 text-gold border-b border-slate-700">
+                        <th class="p-3">No. Tiket / Tgl</th>
+                        <th class="p-3">Pemohon / SKPK</th>
+                        <th class="p-3">Jenis Konsultasi</th>
+                        <th class="p-3">Permasalahan</th>
+                        <th class="p-3 text-center">Jawaban Tim KLIK-PBJ</th>
+                        <th class="p-3 text-center">Status</th>
+                    </tr>
+                </thead>
+                <tbody id="bodyTabelJawaban" class="divide-y divide-slate-800/60">
+                    <tr>
+                        <td colspan="6" class="p-4 text-center text-slate-400">Memuat data dari Google Sheets...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- MODAL DETAIL JAWABAN TIM KLIK-PBJ -->
+    <div id="modal-jawaban" class="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-card border border-slate-700 rounded-2xl w-full max-w-2xl p-6 shadow-2xl relative max-h-[85vh] overflow-y-auto">
+            <button onclick="closeJawabanModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="flex items-center gap-3 border-b border-slate-700 pb-3 mb-4">
+                <div class="bg-amber-500/20 text-amber-400 p-2.5 rounded-lg text-xl">
+                    <i class="fas fa-comment-dots"></i>
                 </div>
                 <div>
-                    <h3 id="modalNoTiket" class="text-lg font-bold text-amber-400">TIKET: -</h3>
-                    <p id="modalSubHeader" class="text-xs text-slate-400">-</p>
+                    <h3 class="text-base font-bold text-gold" id="detail-tiket">DETAIL JAWABAN KONSULTASI</h3>
+                    <p class="text-xs text-slate-400" id="detail-tgl-skpk">-</p>
                 </div>
             </div>
 
-            <div class="space-y-4 text-xs md:text-sm">
+            <div class="space-y-4 text-xs">
                 <div>
-                    <label class="block text-slate-400 text-[11px] font-semibold uppercase mb-1">Nama Pemohon:</label>
-                    <div id="modalPemohon" class="bg-slate-800/80 border border-slate-700/50 rounded-lg p-2.5 font-bold text-slate-200">-</div>
+                    <span class="text-slate-400 uppercase tracking-wider font-semibold block mb-1">Nama Pemohon:</span>
+                    <p class="bg-slate-900/80 p-2.5 rounded-lg border border-slate-800 font-semibold text-slate-200" id="detail-pemohon">-</p>
+                </div>
+                <div>
+                    <span class="text-slate-400 uppercase tracking-wider font-semibold block mb-1">Jenis Konsultasi:</span>
+                    <p class="bg-slate-900/80 p-2.5 rounded-lg border border-slate-800 font-semibold text-emerald-400" id="detail-jenis">-</p>
+                </div>
+                <div>
+                    <span class="text-slate-400 uppercase tracking-wider font-semibold block mb-1">Uraian Permasalahan:</span>
+                    <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-800 leading-relaxed text-slate-300" id="detail-permasalahan">-</div>
+                </div>
+                <div>
+                    <span class="text-amber-400 uppercase tracking-wider font-bold block mb-1"><i class="fas fa-award mr-1"></i> Tanggapan / Jawaban Tim KLIK-PBJ:</span>
+                    <div class="bg-emerald-950/40 p-4 rounded-lg border border-emerald-500/30 text-emerald-100 leading-relaxed font-medium" id="detail-jawaban">-</div>
+                </div>
+            </div>
+
+            <div class="mt-6 text-right">
+                <button onclick="closeJawabanModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-5 py-2 rounded-lg text-xs font-bold">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL FORM LENGKAP KONSULTASI PBJ -->
+    <div id="modal-form" class="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 md:p-6 z-50 hidden">
+        <div class="bg-card border border-slate-700 rounded-2xl w-full max-w-3xl p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeForm()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="mb-5 border-b border-slate-700 pb-3">
+                <h3 id="form-title" class="text-xl font-bold text-gold">FORMULIR PENGAJUAN KONSULTASI KLIK-PBJ</h3>
+                <p class="text-xs text-slate-300 mt-1">Klinik Layanan Integrasi Konsultasi Pengadaan Barang dan Jasa Kabupaten Simeulue</p>
+            </div>
+
+            <form id="consultation-form" onsubmit="submitForm(event)" class="space-y-6">
+                <input type="hidden" id="form-topik">
+
+                <!-- BAGIAN 1: IDENTITAS PEMOHON -->
+                <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                    <h4 class="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-3"><i class="fas fa-user-tie mr-1"></i> BAGIAN 1 — IDENTITAS PEMOHON</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Pemohon *</label>
+                            <input type="text" id="input-nama" required placeholder="Nama lengkap & gelar" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">NIP / NIK *</label>
+                            <input type="text" id="input-nip" required placeholder="NIP ASN / NIK" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Jabatan *</label>
+                            <select id="input-jabatan" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
+                                <option value="">-- Pilih Jabatan --</option>
+                                <option value="PA">PA</option>
+                                <option value="KPA">KPA</option>
+                                <option value="PPK">PPK</option>
+                                <option value="Pejabat Pengadaan">Pejabat Pengadaan</option>
+                                <option value="Pokja Pemilihan">Pokja Pemilihan</option>
+                                <option value="PPTK">PPTK</option>
+                                <option value="Bendahara">Bendahara</option>
+                                <option value="Pengelola PBJ">Pengelola PBJ</option>
+                                <option value="Pejabat/Pegawai SKPK">Pejabat/Pegawai SKPK</option>
+                                <option value="Penyedia">Penyedia</option>
+                                <option value="Pelaku Usaha">Pelaku Usaha</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Nama SKPK / Instansi *</label>
+                            <select id="input-skpk" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
+                                <option value="">-- Pilih SKPK / Instansi --</option>
+                                <option value="Sekretariat Daerah">Sekretariat Daerah</option>
+                                <option value="BAPPEDA">BAPPEDA</option>
+                                <option value="Dinas PUPR">Dinas PUPR</option>
+                                <option value="Dinas Kesehatan">Dinas Kesehatan</option>
+                                <option value="Dinas Pendidikan">Dinas Pendidikan</option>
+                                <option value="Dinas Perhubungan">Dinas Perhubungan</option>
+                                <option value="Dinas Sosial">Dinas Sosial</option>
+                                <option value="Dinas Pertanian">Dinas Pertanian</option>
+                                <option value="Dinas Perikanan">Dinas Perikanan</option>
+                                <option value="DP3AKB">DP3AKB</option>
+                                <option value="BKPSDM Kab. Simeulue">BKPSDM Kab. Simeulue</option>
+                                <option value="Kecamatan">Kecamatan</option>
+                                <option value="RSUD">RSUD</option>
+                                <option value="Sekretariat DPRK">Sekretariat DPRK</option>
+                                <option value="Inspektorat">Inspektorat</option>
+                                <option value="SKPK Lainnya">SKPK Lainnya</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Nomor WhatsApp Aktif *</label>
+                            <input type="tel" id="input-wa" required placeholder="08xxxxxxxxxx" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Alamat Email *</label>
+                            <input type="email" id="input-email" required placeholder="email@domain.com" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
+                        </div>
+                    </div>
                 </div>
 
-                <div>
-                    <label class="block text-slate-400 text-[11px] font-semibold uppercase mb-1">Jenis Konsultasi:</label>
-                    <div id="modalJenis" class="bg-slate-800/80 border border-slate-700/50 rounded-lg p-2.5 font-bold text-emerald-400">-</div>
+                <!-- BAGIAN 2: INFORMASI PENGADAAN -->
+                <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                    <h4 class="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-3"><i class="fas fa-boxes-packing mr-1"></i> BAGIAN 2 — INFORMASI PENGADAAN</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Tahapan Pengadaan yang Dikonsultasikan</label>
+                            <select id="input-tahapan" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
+                                <option value="Identifikasi kebutuhan">Identifikasi kebutuhan</option>
+                                <option value="Perencanaan Pengadaan">Perencanaan Pengadaan</option>
+                                <option value="Persiapan Pengadaan">Persiapan Pengadaan</option>
+                                <option value="Persiapan Pemilihan">Persiapan Pemilihan</option>
+                                <option value="Pelaksanaan Pemilihan Penyedia">Pelaksanaan Pemilihan Penyedia</option>
+                                <option value="Penetapan/Penandatanganan Kontrak">Penetapan/Penandatanganan Kontrak</option>
+                                <option value="Pelaksanaan Kontrak">Pelaksanaan Kontrak</option>
+                                <option value="Perubahan Kontrak">Perubahan Kontrak</option>
+                                <option value="Pengendalian Kontrak">Pengendalian Kontrak</option>
+                                <option value="Serah Terima Hasil Pekerjaan">Serah Terima Hasil Pekerjaan</option>
+                                <option value="Pembayaran">Pembayaran</option>
+                                <option value="E-Purchasing/Katalog Elektronik">E-Purchasing/Katalog Elektronik</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Metode Pengadaan</label>
+                            <select id="input-metode" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
+                                <option value="E-Purchasing/Katalog Elektronik">E-Purchasing/Katalog Elektronik</option>
+                                <option value="Pengadaan Langsung">Pengadaan Langsung</option>
+                                <option value="Tender">Tender</option>
+                                <option value="Tender Cepat">Tender Cepat</option>
+                                <option value="Seleksi">Seleksi</option>
+                                <option value="Penunjukan Langsung">Penunjukan Langsung</option>
+                                <option value="Swakelola">Swakelola</option>
+                                <option value="Belum ditentukan">Belum ditentukan</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Paket Pengadaan</label>
+                            <input type="text" id="input-paket" placeholder="Contoh: Pembangunan Gedung..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Nilai/HPS/Pagu Anggaran</label>
+                            <input type="text" id="input-pagu" placeholder="Contoh: Rp 500.000.000 / Belum tersedia" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
+                        </div>
+                    </div>
                 </div>
 
-                <div>
-                    <label class="block text-slate-400 text-[11px] font-semibold uppercase mb-1">Uraian Permasalahan:</label>
-                    <div id="modalPermasalahan" class="bg-slate-800/80 border border-slate-700/50 rounded-lg p-3 text-slate-300 leading-relaxed whitespace-pre-line max-h-36 overflow-y-auto">-</div>
+                <!-- BAGIAN 3 & 5: SUBSTANSI & METODE KONSULTASI -->
+                <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                    <h4 class="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-3"><i class="fas fa-file-pen mr-1"></i> BAGIAN 3 & 5 — SUBSTANSI & METODE KONSULTASI</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Uraian Permasalahan *</label>
+                            <textarea id="input-uraian" rows="2" required placeholder="Jelaskan secara kronologis permasalahan yang dihadapi..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Pertanyaan / Solusi yang Diharapkan *</label>
+                            <textarea id="input-pertanyaan" rows="2" required placeholder="Jelaskan hal spesifik yang ingin dikonsultasikan..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white"></textarea>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Bentuk Konsultasi yang Diharapkan</label>
+                                <select id="input-bentuk" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
+                                    <option value="Konsultasi melalui WhatsApp">Konsultasi melalui WhatsApp</option>
+                                    <option value="Konsultasi tatap muka">Konsultasi tatap muka</option>
+                                    <option value="Konsultasi melalui video conference">Konsultasi melalui video conference</option>
+                                    <option value="Jawaban/penjelasan tertulis">Jawaban/penjelasan tertulis</option>
+                                    <option value="Tidak ada preferensi">Tidak ada preferensi</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Upload Berkas PDF / Foto Tangkapan Layar</label>
+                                <input type="file" id="input-dokumen-file" accept=".pdf,image/*" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-emerald-500 file:text-slate-900 hover:file:bg-emerald-400 cursor-pointer">
+                                <p class="text-[10px] text-slate-400 mt-1">Format: PDF, JPG, PNG (Maksimal 5MB)</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div>
-                    <label class="block text-amber-400 text-[11px] font-semibold uppercase mb-1 flex items-center gap-1">
-                        <i class="fas fa-user-shield"></i> Tanggapan / Jawaban Tim KLIK-PBJ:
+                <!-- BAGIAN 6: PERNYATAAN PEMOHON -->
+                <div class="bg-amber-500/10 border border-amber-500/30 p-3 rounded-xl">
+                    <label class="flex items-start gap-2 cursor-pointer">
+                        <input type="checkbox" id="input-pernyataan" required class="mt-1 accent-emerald-500">
+                        <span class="text-[11px] text-slate-300 leading-snug">
+                            Saya menyatakan bahwa data/informasi yang disampaikan adalah benar dan memahami bahwa konsultasi KLIK-PBJ bersifat konsultatif serta tidak mengambil alih kewenangan pejabat berwenang.
+                        </span>
                     </label>
-                    <div id="modalJawaban" class="bg-slate-800/90 border border-emerald-500/30 rounded-lg p-3 text-emerald-300 leading-relaxed whitespace-pre-line max-h-48 overflow-y-auto">-</div>
                 </div>
-            </div>
 
-            <div class="text-right pt-2">
-                <button onclick="closeModal()" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 px-5 py-2 rounded-xl text-xs font-bold">
-                    Tutup
-                </button>
-            </div>
-
+                <div class="flex gap-3">
+                    <button type="button" onclick="closeForm()" class="w-1/3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-lg text-xs">Batal</button>
+                    <button type="submit" id="submit-btn" class="w-2/3 bg-btn-green hover:brightness-110 text-slate-900 font-bold py-2.5 rounded-lg text-xs flex items-center justify-center gap-2">
+                        <span>Kirim & Registrasi Tiket KLIK-PBJ</span>
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
-
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- JAVASCRIPT INTEGRATION -->
     <script>
-        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRqO5gTjIAt9S9Y143O5sL_vV8G1vUdfBvhK9oOInM0Ebf4h177-uJE97_W0F6cgC3jwman3-Kvrh6ABk/pub?gid=854421834&single=true&output=csv';
-        const WEB_APP_URL = 'GANTI_DENGAN_URL_DEPLOY_WEB_APP_GOOGLE_SCRIPT_ANDA';
-
-        const PIN_BIDANG = {
-            'Barang': '1234',
-            'Konstruksi': '2345',
-            'Konsultansi': '3456',
-            'Lainnya': '4567',
-            'Pasca': '5678'
-        };
+        const SHEET_ID = '1PWCqrGBf4h177-uJE97_W0F6cgC3jwman3-Kvrh6ABk';
+        const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv`;
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbziNsZ8R2S_Tg2LdQv3zK1CkRTzVSvJTzLyiqCYJLAyhF84QjtJCSxpZXbA3oA6dyer/exec';
 
         let globalDataStore = [];
-        let activeBidangTim = '';
-        let filteredTiketTim = [];
 
-        async function loadDataFromSheet() {
-            const loading = document.getElementById('loading-indicator');
-            if (loading) loading.classList.remove('hidden');
+        window.addEventListener('DOMContentLoaded', function() {
+            loadDataFromSheet();
+            
+            const savedLogo = localStorage.getItem('klikpbj_banner_logo');
+            if (savedLogo) {
+                const customLogo = document.getElementById('custom-logo');
+                const defaultIcon = document.getElementById('default-logo-icon');
+                if (customLogo) {
+                    customLogo.src = savedLogo;
+                    customLogo.classList.remove('hidden');
+                    customLogo.style.display = 'block';
+                }
+                if (defaultIcon) defaultIcon.classList.add('hidden');
+            }
+        });
 
-            try {
-                const res = await fetch(CSV_URL + '&t=' + new Date().getTime());
-                const dataText = await res.text();
-                const rows = parseCSV(dataText);
-
-                if (rows.length > 1) {
-                    let total = 0, selesai = 0, proses = 0;
-                    globalDataStore = [];
-
-                    for (let i = 1; i < rows.length; i++) {
-                        const row = rows[i];
-                        if (!row || row.length < 2 || !row[1]) continue;
-
-                        total++;
-
-                        const noTiket = row[1] || '-';                           
-                        const tglMasuk = row[2] || '-';                          
-                        const pemohonRaw = (row[3] || '').trim();               
-                        const skpk = (row[7] || '-').trim();                    
-                        const jenis = (row[9] || '-').trim();                   
-                        const permasalahan = (row[12] || '-').trim();           
-                        const status = (row[17] || '').trim().toLowerCase();     
-                        const jawaban = (row[19] || 'Belum ada jawaban dari Tim KLIK-PBJ.').trim(); 
-
-                        const pemohon = pemohonRaw !== '' ? pemohonRaw : (skpk !== '-' ? skpk : 'Pemohon');
-
-                        if (status.includes('selesai')) selesai++;
-                        else proses++;
-
-                        globalDataStore.push({
-                            noTiket, tglMasuk, pemohon, skpk, jenis, permasalahan, jawaban, status
-                        });
+        document.getElementById('banner-upload')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    const base64Image = evt.target.result;
+                    const customLogo = document.getElementById('custom-logo');
+                    const defaultIcon = document.getElementById('default-logo-icon');
+                    
+                    if (customLogo) {
+                        customLogo.src = base64Image;
+                        customLogo.classList.remove('hidden');
+                        customLogo.style.display = 'block';
                     }
-
-                    document.getElementById('stat-total').innerText = total;
-                    document.getElementById('stat-selesai').innerText = selesai;
-                    document.getElementById('stat-proses').innerText = proses;
-
-                    renderTable(globalDataStore);
-                }
-            } catch (err) {
-                console.error('Gagal memuat data:', err);
-            } finally {
-                if (loading) loading.classList.add('hidden');
-            }
-        }
-
-        function renderTable(dataList) {
-            let tableHtml = '';
-            dataList.forEach((data) => {
-                const origIndex = globalDataStore.findIndex(g => g.noTiket === data.noTiket);
-                const statusBadge = data.status.includes('selesai') 
-                    ? '<span class="px-2.5 py-1 rounded-md text-[11px] bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30">Selesai</span>'
-                    : '<span class="px-2.5 py-1 rounded-md text-[11px] bg-amber-500/20 text-amber-400 font-bold border border-amber-500/30">Proses</span>';
-
-                tableHtml += `
-                    <tr class="hover:bg-slate-800/40 transition-colors border-b border-slate-800/60">
-                        <td class="p-3 font-semibold text-amber-300">${data.noTiket}<br><span class="text-[10px] text-slate-400 font-normal">${data.tglMasuk}</span></td>
-                        <td class="p-3 font-medium">${data.pemohon}<br><span class="text-[10px] text-slate-400 font-normal">${data.skpk}</span></td>
-                        <td class="p-3 font-semibold text-emerald-400">${data.jenis}</td>
-                        <td class="p-3 text-slate-300 max-w-xs truncate">${data.permasalahan !== '' ? data.permasalahan : '-'}</td>
-                        <td class="p-3 text-center">
-                            <button onclick="showDetailJawaban(${origIndex})" class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all inline-flex items-center gap-1.5">
-                                <i class="fas fa-eye"></i> Lihat Jawaban
-                            </button>
-                        </td>
-                        <td class="p-3 text-center">${statusBadge}</td>
-                    </tr>
-                `;
-            });
-
-            if (tableHtml) {
-                document.getElementById('bodyTabelJawaban').innerHTML = tableHtml;
-            } else {
-                document.getElementById('bodyTabelJawaban').innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-400">Tidak ada data konsultasi.</td></tr>';
-            }
-        }
-
-        // BUKA PORTAL JAWAB TIM
-        function openPortalTimByBidang(bidang) {
-            activeBidangTim = bidang;
-            document.getElementById('labelBidangAktif').innerText = 'Bidang: ' + bidang;
-            document.getElementById('stepVerifikasiPin').classList.remove('hidden');
-            document.getElementById('stepJawabTiket').classList.add('hidden');
-            document.getElementById('inputPinTim').value = '';
-            document.getElementById('modalPortalTim').classList.remove('hidden');
-        }
-
-        function closePortalTimModal() {
-            document.getElementById('modalPortalTim').classList.add('hidden');
-        }
-
-        function verifikasiPinTim() {
-            const pinInput = document.getElementById('inputPinTim').value.trim();
-
-            if (pinInput === PIN_BIDANG[activeBidangTim]) {
-                document.getElementById('stepVerifikasiPin').classList.add('hidden');
-                document.getElementById('stepJawabTiket').classList.remove('hidden');
-                
-                filteredTiketTim = globalDataStore.filter(item => {
-                    return item.jenis.toLowerCase().includes(activeBidangTim.toLowerCase()) && !item.status.includes('selesai');
-                });
-
-                const selectTiket = document.getElementById('selectTiketProses');
-                selectTiket.innerHTML = '';
-
-                if (filteredTiketTim.length > 0) {
-                    filteredTiketTim.forEach((item, idx) => {
-                        selectTiket.innerHTML += `<option value="${idx}">${item.noTiket} - ${item.pemohon}</option>`;
-                    });
-                    loadDetailTiketPilihan();
-                } else {
-                    selectTiket.innerHTML = '<option value="">Tidak ada tiket pending</option>';
-                    document.getElementById('detailPemohonTim').innerText = '-';
-                    document.getElementById('detailUraianTim').innerText = 'Semua tiket di bidang ini sudah selesai dijawab.';
-                }
-            } else {
-                alert('PIN Salah! Hak akses ditolak.');
-            }
-        }
-
-        function loadDetailTiketPilihan() {
-            const idx = document.getElementById('selectTiketProses').value;
-            if (idx !== "" && filteredTiketTim[idx]) {
-                const item = filteredTiketTim[idx];
-                document.getElementById('detailPemohonTim').innerText = item.pemohon + ' (' + item.skpk + ')';
-                document.getElementById('detailUraianTim').innerText = item.permasalahan !== '' ? item.permasalahan : '-';
-            }
-        }
-
-        async function kirimJawabanTim() {
-            const idx = document.getElementById('selectTiketProses').value;
-            const namaTim = document.getElementById('inputNamaTim').value.trim();
-            const jawaban = document.getElementById('inputTextJawabanTim').value.trim();
-
-            if (idx === "" || !filteredTiketTim[idx]) { alert('Pilih tiket!'); return; }
-            if (!namaTim) { alert('Isi Nama Petugas/Tim!'); return; }
-            if (!jawaban) { alert('Isi Teks Jawaban!'); return; }
-
-            const tiketSelected = filteredTiketTim[idx];
-            const btn = document.getElementById('btnKirimJawaban');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan ke Google Sheets...';
-
-            try {
-                const payload = {
-                    action: "jawab_tiket",
-                    noTiket: tiketSelected.noTiket,
-                    namaTim: namaTim,
-                    jawaban: jawaban
+                    if (defaultIcon) defaultIcon.classList.add('hidden');
+                    localStorage.setItem('klikpbj_banner_logo', base64Image);
                 };
-
-                const res = await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    body: JSON.stringify(payload)
-                });
-
-                const result = await res.json();
-                if (result.result === 'success') {
-                    alert('Jawaban Berhasil Disimpan ke Google Sheets!');
-                    closePortalTimModal();
-                    loadDataFromSheet();
-                } else {
-                    alert('Gagal: ' + result.message);
-                }
-            } catch (err) {
-                alert('Terjadi kesalahan koneksi.');
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-paper-plane"></i> Kirim Jawaban Ke Google Sheets';
+                reader.readAsDataURL(file);
             }
-        }
-
-        function filterTableByBidang(bidang) {
-            if (!bidang) {
-                renderTable(globalDataStore);
-            } else {
-                const filtered = globalDataStore.filter(i => i.jenis.toLowerCase().includes(bidang.toLowerCase()));
-                renderTable(filtered);
-            }
-            document.getElementById('sectionTabel').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function showDetailJawaban(index) {
-            const data = globalDataStore[index];
-            if (!data) return;
-
-            document.getElementById('modalNoTiket').innerText = 'TIKET: ' + data.noTiket;
-            document.getElementById('modalSubHeader').innerText = data.tglMasuk + ' | SKPK: ' + data.skpk;
-            document.getElementById('modalPemohon').innerText = data.pemohon;
-            document.getElementById('modalJenis').innerText = data.jenis;
-            document.getElementById('modalPermasalahan').innerText = data.permasalahan !== '' ? data.permasalahan : '-';
-            document.getElementById('modalJawaban').innerText = data.jawaban !== '' ? data.jawaban : 'Belum ada jawaban dari Tim KLIK-PBJ.';
-
-            document.getElementById('modalDetail').classList.remove('hidden');
-        }
-
-        function closeModal() {
-            document.getElementById('modalDetail').classList.add('hidden');
-        }
-
-        function filterTable() {
-            const q = document.getElementById('inputSearch').value.toLowerCase();
-            const filtered = globalDataStore.filter(i => 
-                i.noTiket.toLowerCase().includes(q) || 
-                i.pemohon.toLowerCase().includes(q) || 
-                i.skpk.toLowerCase().includes(q) ||
-                i.permasalahan.toLowerCase().includes(q)
-            );
-            renderTable(filtered);
-        }
+        });
 
         function parseCSV(text) {
             let p = '', c = '', r = [];
@@ -572,21 +518,217 @@
             let row = [''];
             for (let i = 0; i < text.length; i++) {
                 c = text[i];
-                p = text[i - 1];
+                let next = text[i+1];
                 if (c === '"') {
-                    if (q && text[i + 1] === '"') { row[row.length - 1] += '"'; i++; } 
+                    if (q && next === '"') { row[row.length - 1] += '"'; i++; }
                     else { q = !q; }
-                } else if (c === ',' && !q) { row.push(''); } 
-                else if ((c === '\r' || c === '\n') && !q) {
-                    if (c === '\r' && text[i + 1] === '\n') { i++; }
-                    r.push(row); row = [''];
-                } else { row[row.length - 1] += c; }
+                } else if (c === ',' && !q) {
+                    row.push('');
+                } else if ((c === '\r' || c === '\n') && !q) {
+                    if (c === '\r' && next === '\n') { i++; }
+                    r.push(row);
+                    row = [''];
+                } else {
+                    row[row.length - 1] += c;
+                }
             }
             if (row.length > 1 || row[0] !== '') { r.push(row); }
             return r;
         }
 
-        document.addEventListener('DOMContentLoaded', loadDataFromSheet);
+        function openForm(topik) {
+            document.getElementById('form-topik').value = topik;
+            document.getElementById('form-title').innerText = 'FORMULIR PENGAJUAN KONSULTASI: ' + topik.toUpperCase();
+            document.getElementById('modal-form').classList.remove('hidden');
+        }
+
+        function closeForm() {
+            document.getElementById('modal-form').classList.add('hidden');
+            document.getElementById('consultation-form').reset();
+        }
+
+        function showDetailJawaban(index) {
+            const item = globalDataStore[index];
+            if (!item) return;
+
+            document.getElementById('detail-tiket').innerText = 'TIKET: ' + item.noTiket;
+            document.getElementById('detail-tgl-skpk').innerText = item.tglMasuk + ' | SKPK: ' + item.skpk;
+            document.getElementById('detail-pemohon').innerText = item.pemohon;
+            document.getElementById('detail-jenis').innerText = item.jenis;
+            document.getElementById('detail-permasalahan').innerText = item.permasalahan;
+            document.getElementById('detail-jawaban').innerText = item.jawaban;
+
+            document.getElementById('modal-jawaban').classList.remove('hidden');
+        }
+
+        function closeJawabanModal() {
+            document.getElementById('modal-jawaban').classList.add('hidden');
+        }
+
+        async function submitForm(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses Registrasi...';
+
+            const payload = {
+                topik: document.getElementById('form-topik').value,
+                nama: document.getElementById('input-nama').value,
+                nip: document.getElementById('input-nip').value,
+                jabatan: document.getElementById('input-jabatan').value,
+                skpk: document.getElementById('input-skpk').value,
+                wa: document.getElementById('input-wa').value,
+                email: document.getElementById('input-email').value,
+                tahapan: document.getElementById('input-tahapan').value,
+                metode: document.getElementById('input-metode').value,
+                paket: document.getElementById('input-paket').value,
+                pagu: document.getElementById('input-pagu').value,
+                uraian: document.getElementById('input-uraian').value,
+                pertanyaan: document.getElementById('input-pertanyaan').value,
+                bentuk: document.getElementById('input-bentuk').value
+            };
+
+            try {
+                await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                alert('Pengajuan Konsultasi Berhasil Dikirim & Terdaftar!');
+                closeForm();
+                loadDataFromSheet();
+            } catch (err) {
+                alert('Terjadi kesalahan saat mengirim data.');
+                console.error(err);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<span>Kirim & Registrasi Tiket KLIK-PBJ</span>';
+            }
+        }
+
+        async function loadDataFromSheet() {
+            const loading = document.getElementById('loading-indicator');
+            if(loading) loading.classList.remove('hidden');
+            
+            try {
+                const res = await fetch(CSV_URL + '&t=' + new Date().getTime());
+                const dataText = await res.text();
+                const rows = parseCSV(dataText);
+
+                if (rows.length > 1) {
+                    let total = 0, selesai = 0, proses = 0;
+                    let catData = {
+                        'Barang': { tot: 0, sel: 0, pro: 0 },
+                        'Konstruksi': { tot: 0, sel: 0, pro: 0 },
+                        'Konsultansi': { tot: 0, sel: 0, pro: 0 },
+                        'Jasa Lainnya': { tot: 0, sel: 0, pro: 0 },
+                        'Pasca Kontrak': { tot: 0, sel: 0, pro: 0 }
+                    };
+
+                    let tableHtml = '';
+                    globalDataStore = [];
+
+                    for (let i = 1; i < rows.length; i++) {
+                        const row = rows[i];
+                        if (!row || row.length < 2 || !row[1]) continue;
+
+                        total++;
+                        
+                        // KOREKSI INDEX SESUAI KODE SHEETS TERBARU
+                        const noTiket = row[1] || '-';                       // Kolom B
+                        const tglMasuk = row[2] || '-';                      // Kolom C
+                        const pemohonRaw = (row[3] || '').trim();           // Kolom D
+                        const skpk = (row[7] || '-').trim();                // Kolom H
+                        const jenis = (row[9] || '-').trim();               // Kolom J (Jenis Konsultasi)
+                        const permasalahan = (row[12] || '-').trim();        // Kolom M (Uraian Singkat Permasalahan)
+                        const status = (row[17] || '').trim().toLowerCase(); // Kolom R (Status)
+                        const jawaban = (row[19] || 'Belum ada jawaban').trim(); // Kolom T (Hasil/Tindak Lanjut)
+
+                        const pemohon = pemohonRaw !== '' ? pemohonRaw : (skpk !== '-' ? skpk : 'Pemohon');
+
+                        if (status.includes('selesai')) selesai++;
+                        else proses++;
+
+                        Object.keys(catData).forEach(k => {
+                            if (jenis.toLowerCase().includes(k.toLowerCase())) {
+                                catData[k].tot++;
+                                if (status.includes('selesai')) catData[k].sel++;
+                                else catData[k].pro++;
+                            }
+                        });
+
+                        const dataIndex = globalDataStore.length;
+                        globalDataStore.push({
+                            noTiket, tglMasuk, pemohon, skpk, jenis, permasalahan, jawaban, status
+                        });
+
+                        const statusBadge = status.includes('selesai') 
+                            ? '<span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30">Selesai</span>'
+                            : '<span class="px-2 py-0.5 rounded text-[10px] bg-amber-500/20 text-amber-400 font-bold border border-amber-500/30">Proses</span>';
+
+                        tableHtml += `
+                            <tr class="hover:bg-slate-800/40 transition-colors">
+                                <td class="p-3 font-semibold text-amber-300">${noTiket}<br><span class="text-[10px] text-slate-400">${tglMasuk}</span></td>
+                                <td class="p-3 font-medium">${pemohon}<br><span class="text-[10px] text-slate-400">${skpk}</span></td>
+                                <td class="p-3 font-semibold text-emerald-400">${jenis}</td>
+                                <td class="p-3 text-slate-300 max-w-xs truncate">${permasalahan}</td>
+                                <td class="p-3 text-center">
+                                    <button onclick="showDetailJawaban(${dataIndex})" class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all inline-flex items-center gap-1.5">
+                                        <i class="fas fa-eye"></i> Lihat Jawaban
+                                    </button>
+                                </td>
+                                <td class="p-3 text-center">${statusBadge}</td>
+                            </tr>
+                        `;
+                    }
+
+                    document.getElementById('stat-total').innerText = total;
+                    document.getElementById('stat-selesai').innerText = selesai;
+                    document.getElementById('stat-proses').innerText = proses;
+
+                    document.getElementById('tot-barang').innerText = catData['Barang'].tot;
+                    document.getElementById('sel-barang').innerText = catData['Barang'].sel;
+                    document.getElementById('pro-barang').innerText = catData['Barang'].pro;
+
+                    document.getElementById('tot-konstruksi').innerText = catData['Konstruksi'].tot;
+                    document.getElementById('sel-konstruksi').innerText = catData['Konstruksi'].sel;
+                    document.getElementById('pro-konstruksi').innerText = catData['Konstruksi'].pro;
+
+                    document.getElementById('tot-konsultansi').innerText = catData['Konsultansi'].tot;
+                    document.getElementById('sel-konsultansi').innerText = catData['Konsultansi'].sel;
+                    document.getElementById('pro-konsultansi').innerText = catData['Konsultansi'].pro;
+
+                    document.getElementById('tot-lainnya').innerText = catData['Jasa Lainnya'].tot;
+                    document.getElementById('sel-lainnya').innerText = catData['Jasa Lainnya'].sel;
+                    document.getElementById('pro-lainnya').innerText = catData['Jasa Lainnya'].pro;
+
+                    document.getElementById('tot-pascakontrak').innerText = catData['Pasca Kontrak'].tot;
+                    document.getElementById('sel-pascakontrak').innerText = catData['Pasca Kontrak'].sel;
+                    document.getElementById('pro-pascakontrak').innerText = catData['Pasca Kontrak'].pro;
+
+                    if (tableHtml) {
+                        document.getElementById('bodyTabelJawaban').innerHTML = tableHtml;
+                    } else {
+                        document.getElementById('bodyTabelJawaban').innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-400">Belum ada data konsultasi.</td></tr>';
+                    }
+                }
+            } catch (err) {
+                console.error('Gagal memuat data dari Google Sheets:', err);
+            } finally {
+                if(loading) loading.classList.add('hidden');
+            }
+        }
+
+        function filterJawaban() {
+            const input = document.getElementById('searchJawaban').value.toLowerCase();
+            const rows = document.querySelectorAll('#bodyTabelJawaban tr');
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(input) ? '' : 'none';
+            });
+        }
     </script>
 </body>
 </html>
