@@ -434,11 +434,10 @@
         // URL WEB APP GOOGLE APPS SCRIPT
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbziNsZ8R2S_Tg2LdQv3zK1CkRTzVSvJTzLyiqCYJLAyhF84QjtJCSxpZXbA3oA6dyer/exec';
 
-        // PENGATURAN SIMPAN LOGO PERMANEN KE LOCALSTORAGE BROWSER
+        // MEMUAT LOGO TERSIAPAN SAAT HALAMAN DIBUKA
         window.addEventListener('DOMContentLoaded', function() {
             loadDataFromSheet();
             
-            // Cek apakah ada logo tersimpan di browser
             const savedLogo = localStorage.getItem('klikpbj_banner_logo');
             if (savedLogo) {
                 const customLogo = document.getElementById('custom-logo');
@@ -452,7 +451,7 @@
             }
         });
 
-        // Handler Upload Gambar Banner Baru
+        // HANDLER UPLOAD LOGO BANNER
         document.getElementById('banner-upload')?.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
@@ -469,7 +468,6 @@
                     }
                     if (defaultIcon) defaultIcon.classList.add('hidden');
                     
-                    // Simpan gambar secara permanen ke memori browser
                     localStorage.setItem('klikpbj_banner_logo', base64Image);
                 };
                 reader.readAsDataURL(file);
@@ -581,16 +579,16 @@
 
                         total++;
                         
-                        // PEMBACAAN POSISI KOLOM DENGAN STRUKTUR GOOGLE SHEETS
-                        const status = (row[12] || '').trim().toLowerCase(); // Kolom M (Status)
-                        const jenis = (row[8] || '').trim();               // Kolom I (Jenis Konsultasi/Layanan)
-                        const permasalahan = (row[10] || '-').trim();     // Kolom K (Permasalahan)
-                        const jawaban = (row[11] || 'Belum ada jawaban').trim(); // Kolom L (Jawaban)
+                        // PEMBACAAN INDEKS KOLOM SESUAI STRUCTURE GOOGLE SHEETS
+                        const status = (row[12] || '').trim().toLowerCase(); // Kolom M: Status
+                        const jenis = (row[9] || '').trim();               // Kolom J: Jenis Konsultasi
+                        const permasalahan = (row[10] || '-').trim();     // Kolom K: Media / Permasalahan
+                        const jawaban = (row[11] || 'Belum ada jawaban').trim(); // Kolom L: Dokumen / Jawaban
 
                         if (status.includes('selesai')) selesai++;
                         else proses++;
 
-                        // Rekapitulasi per Kategori
+                        // Rekapitulasi per Jenis Layanan
                         Object.keys(catData).forEach(k => {
                             if (jenis.toLowerCase().includes(k.toLowerCase())) {
                                 catData[k].tot++;
