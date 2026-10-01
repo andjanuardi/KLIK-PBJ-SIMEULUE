@@ -237,7 +237,7 @@
                         <th class="p-3">Pemohon / SKPK</th>
                         <th class="p-3">Jenis Konsultasi</th>
                         <th class="p-3">Permasalahan</th>
-                        <th class="p-3">Hasil / Jawaban Tim PBJ</th>
+                        <th class="p-3 text-center">Jawaban Tim KLIK-PBJ</th>
                         <th class="p-3 text-center">Status</th>
                     </tr>
                 </thead>
@@ -249,6 +249,47 @@
             </table>
         </div>
     </section>
+
+    <!-- MODAL DETAIL JAWABAN TIM KLIK-PBJ -->
+    <div id="modal-jawaban" class="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-card border border-slate-700 rounded-2xl w-full max-w-2xl p-6 shadow-2xl relative max-h-[85vh] overflow-y-auto">
+            <button onclick="closeJawabanModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="flex items-center gap-3 border-b border-slate-700 pb-3 mb-4">
+                <div class="bg-amber-500/20 text-amber-400 p-2.5 rounded-lg text-xl">
+                    <i class="fas fa-comment-dots"></i>
+                </div>
+                <div>
+                    <h3 class="text-base font-bold text-gold" id="detail-tiket">DETAIL JAWABAN KONSULTASI</h3>
+                    <p class="text-xs text-slate-400" id="detail-tgl-skpk">-</p>
+                </div>
+            </div>
+
+            <div class="space-y-4 text-xs">
+                <div>
+                    <span class="text-slate-400 uppercase tracking-wider font-semibold block mb-1">Nama Pemohon:</span>
+                    <p class="bg-slate-900/80 p-2.5 rounded-lg border border-slate-800 font-semibold text-slate-200" id="detail-pemohon">-</p>
+                </div>
+                <div>
+                    <span class="text-slate-400 uppercase tracking-wider font-semibold block mb-1">Jenis Konsultasi:</span>
+                    <p class="bg-slate-900/80 p-2.5 rounded-lg border border-slate-800 font-semibold text-emerald-400" id="detail-jenis">-</p>
+                </div>
+                <div>
+                    <span class="text-slate-400 uppercase tracking-wider font-semibold block mb-1">Uraian Permasalahan:</span>
+                    <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-800 leading-relaxed text-slate-300" id="detail-permasalahan">-</div>
+                </div>
+                <div>
+                    <span class="text-amber-400 uppercase tracking-wider font-bold block mb-1"><i class="fas fa-award mr-1"></i> Tanggapan / Jawaban Tim KLIK-PBJ:</span>
+                    <div class="bg-emerald-950/40 p-4 rounded-lg border border-emerald-500/30 text-emerald-100 leading-relaxed font-medium" id="detail-jawaban">-</div>
+                </div>
+            </div>
+
+            <div class="mt-6 text-right">
+                <button onclick="closeJawabanModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-5 py-2 rounded-lg text-xs font-bold">Tutup</button>
+            </div>
+        </div>
+    </div>
 
     <!-- MODAL FORM LENGKAP KONSULTASI PBJ -->
     <div id="modal-form" class="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 md:p-6 z-50 hidden">
@@ -430,11 +471,10 @@
     <script>
         const SHEET_ID = '1PWCqrGBf4h177-uJE97_W0F6cgC3jwman3-Kvrh6ABk';
         const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv`;
-        
-        // URL WEB APP GOOGLE APPS SCRIPT
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbziNsZ8R2S_Tg2LdQv3zK1CkRTzVSvJTzLyiqCYJLAyhF84QjtJCSxpZXbA3oA6dyer/exec';
 
-        // MEMUAT LOGO TERPREFERENSI SAAT HALAMAN DIBUKA
+        let globalDataStore = []; // Memori penampung data spreadsheet
+
         window.addEventListener('DOMContentLoaded', function() {
             loadDataFromSheet();
             
@@ -451,7 +491,6 @@
             }
         });
 
-        // HANDLER UPLOAD BANNER
         document.getElementById('banner-upload')?.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
@@ -467,7 +506,6 @@
                         customLogo.style.display = 'block';
                     }
                     if (defaultIcon) defaultIcon.classList.add('hidden');
-                    
                     localStorage.setItem('klikpbj_banner_logo', base64Image);
                 };
                 reader.readAsDataURL(file);
@@ -507,6 +545,24 @@
         function closeForm() {
             document.getElementById('modal-form').classList.add('hidden');
             document.getElementById('consultation-form').reset();
+        }
+
+        function showDetailJawaban(index) {
+            const item = globalDataStore[index];
+            if (!item) return;
+
+            document.getElementById('detail-tiket').innerText = 'TIKET: ' + item.noTiket;
+            document.getElementById('detail-tgl-skpk').innerText = item.tglMasuk + ' | SKPK: ' + item.skpk;
+            document.getElementById('detail-pemohon').innerText = item.pemohon;
+            document.getElementById('detail-jenis').innerText = item.jenis;
+            document.getElementById('detail-permasalahan').innerText = item.permasalahan;
+            document.getElementById('detail-jawaban').innerText = item.jawaban;
+
+            document.getElementById('modal-jawaban').classList.remove('hidden');
+        }
+
+        function closeJawabanModal() {
+            document.getElementById('modal-jawaban').classList.add('hidden');
         }
 
         async function submitForm(e) {
@@ -572,6 +628,7 @@
                     };
 
                     let tableHtml = '';
+                    globalDataStore = [];
 
                     for (let i = 1; i < rows.length; i++) {
                         const row = rows[i];
@@ -579,29 +636,32 @@
 
                         total++;
                         
-                        // PEMBACAAN POSISI KOLOM PERBAIKAN AKURAT
-                        const noTiket = row[1] || '-';                      // Kolom B
-                        const tglMasuk = row[2] || '-';                     // Kolom C
-                        const pemohonRaw = (row[3] || '').trim();          // Kolom D
-                        const skpk = (row[7] || '-').trim();               // Kolom H
-                        const jenis = (row[9] || '-').trim();              // Kolom J (Jenis Konsultasi)
-                        const permasalahan = (row[11] || '-').trim();       // Kolom L (Permasalahan)
-                        const jawaban = (row[12] || 'Belum ada jawaban').trim(); // Kolom M (Jawaban)
-                        const status = (row[13] || '').trim().toLowerCase();     // Kolom N (Status)
+                        const noTiket = row[1] || '-';                      
+                        const tglMasuk = row[2] || '-';                     
+                        const pemohonRaw = (row[3] || '').trim();          
+                        const skpk = (row[7] || '-').trim();               
+                        const jenis = (row[9] || '-').trim();              
+                        const permasalahan = (row[11] || '-').trim();       
+                        const jawaban = (row[12] || 'Belum ada jawaban').trim(); 
+                        const status = (row[13] || '').trim().toLowerCase();     
 
-                        // Penanganan Tampilan Nama Pemohon Kosong
-                        const pemohon = pemohonRaw !== '' ? pemohonRaw : 'Pemohon';
+                        const pemohon = pemohonRaw !== '' ? pemohonRaw : (skpk !== '-' ? skpk : 'Pemohon');
 
                         if (status.includes('selesai')) selesai++;
                         else proses++;
 
-                        // Rekapitulasi per Kategori Layanan
                         Object.keys(catData).forEach(k => {
                             if (jenis.toLowerCase().includes(k.toLowerCase())) {
                                 catData[k].tot++;
                                 if (status.includes('selesai')) catData[k].sel++;
                                 else catData[k].pro++;
                             }
+                        });
+
+                        // Simpan data di array lokal untuk popup modal detail
+                        const dataIndex = globalDataStore.length;
+                        globalDataStore.push({
+                            noTiket, tglMasuk, pemohon, skpk, jenis, permasalahan, jawaban, status
                         });
 
                         const statusBadge = status.includes('selesai') 
@@ -614,13 +674,16 @@
                                 <td class="p-3 font-medium">${pemohon}<br><span class="text-[10px] text-slate-400">${skpk}</span></td>
                                 <td class="p-3 font-semibold text-emerald-400">${jenis}</td>
                                 <td class="p-3 text-slate-300 max-w-xs truncate">${permasalahan}</td>
-                                <td class="p-3 text-slate-300 max-w-xs truncate">${jawaban}</td>
+                                <td class="p-3 text-center">
+                                    <button onclick="showDetailJawaban(${dataIndex})" class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all inline-flex items-center gap-1.5">
+                                        <i class="fas fa-eye"></i> Lihat Jawaban
+                                    </button>
+                                </td>
                                 <td class="p-3 text-center">${statusBadge}</td>
                             </tr>
                         `;
                     }
 
-                    // Update Statistik Ringkasan
                     document.getElementById('stat-total').innerText = total;
                     document.getElementById('stat-selesai').innerText = selesai;
                     document.getElementById('stat-proses').innerText = proses;
