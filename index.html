@@ -33,14 +33,14 @@
         <!-- VISI -->
         <div class="bg-[#1c2541]/50 border border-slate-800 p-2.5 rounded-xl text-center">
             <p class="text-xs text-slate-300 italic">
-                VISI KABUPATEN SIMEULUE TAHUN 2030: <span class="text-amber-400 font-semibold">"Mewujudkan Simeulue yang bermartabat & pusat pertumbuhan ekonomi baru."</span>
+                VISI KABUPATEN SIMEULUE TAHUN 2026: <span class="text-amber-400 font-semibold">"Mewujudkan Simeulue yang bermartabat & pusat pertumbuhan ekonomi baru."</span>
             </p>
         </div>
 
-        <!-- GRID UTAMA -->
+        <!-- GRID UTAMA (KIRI REKAPITULASI, KANAN AJUKAN KONSULTASI) -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-            <!-- SIDEBAR KIRI -->
+            <!-- SIDEBAR KIRI: REKAPITULASI & STATISTIK -->
             <div class="lg:col-span-4 space-y-4">
                 
                 <!-- PENGATURAN BANNER -->
@@ -57,34 +57,59 @@
                 <!-- REKAPITULASI LAYANAN -->
                 <div class="bg-[#1c2541] border border-slate-800 rounded-xl p-4 space-y-3">
                     <h3 class="text-xs font-bold text-amber-400 uppercase flex items-center gap-1.5">
-                        <i class="fas fa-chart-pie"></i> Rekapitulasi Layanan
+                        <i class="fas fa-chart-pie"></i> Rekapitilasi Layanan
                     </h3>
 
                     <div class="grid grid-cols-2 gap-2">
                         <div class="bg-[#0b132b] p-3 rounded-lg border border-slate-800 text-center">
                             <span class="text-[10px] text-slate-400 block font-semibold uppercase">Total</span>
-                            <span class="text-2xl font-extrabold text-amber-400">9</span>
+                            <span id="stat-total" class="text-2xl font-extrabold text-amber-400">9</span>
                         </div>
                         <div class="bg-[#0b132b] p-3 rounded-lg border border-slate-800 text-center">
                             <span class="text-[10px] text-slate-400 block font-semibold uppercase">Selesai</span>
-                            <span class="text-2xl font-extrabold text-emerald-400">2</span>
+                            <span id="stat-selesai" class="text-2xl font-extrabold text-emerald-400">2</span>
                         </div>
                         <div class="bg-[#0b132b] p-3 rounded-lg border border-slate-800 text-center">
                             <span class="text-[10px] text-slate-400 block font-semibold uppercase">Proses</span>
-                            <span class="text-2xl font-extrabold text-amber-500">7</span>
+                            <span id="stat-proses" class="text-2xl font-extrabold text-amber-500">7</span>
                         </div>
                         <div class="bg-[#0b132b] p-3 rounded-lg border border-slate-800 text-center">
                             <span class="text-[10px] text-slate-400 block font-semibold uppercase">Rata-Rata</span>
                             <span class="text-2xl font-extrabold text-blue-400">1,5</span>
                         </div>
                     </div>
+
+                    <!-- REKAP 5 JENIS LAYANAN -->
+                    <div class="pt-2 border-t border-slate-800/80 space-y-2">
+                        <span class="text-[11px] font-bold text-slate-300 block uppercase">Rekap 5 Jenis Layanan</span>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-[11px]">
+                                <thead class="text-slate-400 border-b border-slate-800">
+                                    <tr>
+                                        <th class="py-1">Layanan</th>
+                                        <th class="py-1 text-center">Total</th>
+                                        <th class="py-1 text-center">Selesai</th>
+                                        <th class="py-1 text-center">Proses</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-800/50 text-slate-200">
+                                    <tr><td class="py-1 flex items-center gap-1"><i class="fas fa-box text-emerald-400 text-[10px]"></i> Barang</td><td class="text-center font-bold">3</td><td class="text-center text-emerald-400 font-bold">1</td><td class="text-center text-amber-400 font-bold">2</td></tr>
+                                    <tr><td class="py-1 flex items-center gap-1"><i class="fas fa-hard-hat text-emerald-400 text-[10px]"></i> Konstruksi</td><td class="text-center font-bold">1</td><td class="text-center text-emerald-400 font-bold">0</td><td class="text-center text-amber-400 font-bold">1</td></tr>
+                                    <tr><td class="py-1 flex items-center gap-1"><i class="fas fa-comments text-emerald-400 text-[10px]"></i> Konsultansi</td><td class="text-center font-bold">0</td><td class="text-center text-emerald-400 font-bold">0</td><td class="text-center text-amber-400 font-bold">0</td></tr>
+                                    <tr><td class="py-1 flex items-center gap-1"><i class="fas fa-gears text-emerald-400 text-[10px]"></i> Jasa Lainnya</td><td class="text-center font-bold">0</td><td class="text-center text-emerald-400 font-bold">0</td><td class="text-center text-amber-400 font-bold">0</td></tr>
+                                    <tr><td class="py-1 flex items-center gap-1"><i class="fas fa-handshake text-emerald-400 text-[10px]"></i> Pasca Kontrak</td><td class="text-center font-bold">2</td><td class="text-center text-emerald-400 font-bold">0</td><td class="text-center text-amber-400 font-bold">2</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
 
             </div>
 
-            <!-- AREA KANAN: AJUKAN KONSULTASI & TOMBOL JAWABAN TIM -->
+            <!-- AREA KANAN: AJUKAN KONSULTASI & INFORMASI DOKUMEN -->
             <div class="lg:col-span-8 space-y-4">
                 
+                <!-- AJUKAN KONSULTASI PER BIDANG (KARTU HIJAU DENAN DUA TOMBOL) -->
                 <div class="space-y-2">
                     <h2 class="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
                         <i class="fas fa-paper-plane"></i> Ajukan Konsultasi
@@ -98,8 +123,11 @@
                                 <i class="fas fa-box text-base"></i> Pengadaan Barang
                             </div>
                             <div class="flex items-center gap-1.5">
-                                <button onclick="bukaPortalTim('Pengadaan Barang')" class="bg-slate-900 hover:bg-slate-800 text-amber-400 text-[11px] font-bold py-1.5 px-3 rounded-lg transition-all flex items-center gap-1 shadow">
-                                    🔑 Jawaban Tim
+                                <button onclick="openFormModal('Pengadaan Barang')" class="bg-slate-900 hover:bg-slate-800 text-amber-400 text-[11px] font-bold py-1.5 px-2.5 rounded-lg transition-all flex items-center gap-1 shadow">
+                                    <i class="fas fa-plus-circle"></i> Buat Tiket
+                                </button>
+                                <button onclick="openPortalTimByBidang('Barang')" class="bg-slate-950/20 hover:bg-slate-950/30 text-slate-950 border border-slate-950/30 text-[11px] font-bold py-1.5 px-2.5 rounded-lg transition-all flex items-center gap-1">
+                                    <i class="fas fa-reply"></i> Jawab Tim
                                 </button>
                             </div>
                         </div>
@@ -110,8 +138,11 @@
                                 <i class="fas fa-hard-hat text-base"></i> Jasa Konstruksi
                             </div>
                             <div class="flex items-center gap-1.5">
-                                <button onclick="bukaPortalTim('Jasa Konstruksi')" class="bg-slate-900 hover:bg-slate-800 text-amber-400 text-[11px] font-bold py-1.5 px-3 rounded-lg transition-all flex items-center gap-1 shadow">
-                                    🔑 Jawaban Tim
+                                <button onclick="openFormModal('Pekerjaan Konstruksi')" class="bg-slate-900 hover:bg-slate-800 text-amber-400 text-[11px] font-bold py-1.5 px-2.5 rounded-lg transition-all flex items-center gap-1 shadow">
+                                    <i class="fas fa-plus-circle"></i> Buat Tiket
+                                </button>
+                                <button onclick="openPortalTimByBidang('Konstruksi')" class="bg-slate-950/20 hover:bg-slate-950/30 text-slate-950 border border-slate-950/30 text-[11px] font-bold py-1.5 px-2.5 rounded-lg transition-all flex items-center gap-1">
+                                    <i class="fas fa-reply"></i> Jawab Tim
                                 </button>
                             </div>
                         </div>
@@ -122,8 +153,11 @@
                                 <i class="fas fa-comments text-base"></i> Jasa Konsultansi
                             </div>
                             <div class="flex items-center gap-1.5">
-                                <button onclick="bukaPortalTim('Jasa Konsultansi')" class="bg-slate-900 hover:bg-slate-800 text-amber-400 text-[11px] font-bold py-1.5 px-3 rounded-lg transition-all flex items-center gap-1 shadow">
-                                    🔑 Jawaban Tim
+                                <button onclick="openFormModal('Jasa Konsultansi')" class="bg-slate-900 hover:bg-slate-800 text-amber-400 text-[11px] font-bold py-1.5 px-2.5 rounded-lg transition-all flex items-center gap-1 shadow">
+                                    <i class="fas fa-plus-circle"></i> Buat Tiket
+                                </button>
+                                <button onclick="openPortalTimByBidang('Konsultansi')" class="bg-slate-950/20 hover:bg-slate-950/30 text-slate-950 border border-slate-950/30 text-[11px] font-bold py-1.5 px-2.5 rounded-lg transition-all flex items-center gap-1">
+                                    <i class="fas fa-reply"></i> Jawab Tim
                                 </button>
                             </div>
                         </div>
@@ -134,8 +168,11 @@
                                 <i class="fas fa-gears text-base"></i> Jasa Lainnya
                             </div>
                             <div class="flex items-center gap-1.5">
-                                <button onclick="bukaPortalTim('Jasa Lainnya')" class="bg-slate-900 hover:bg-slate-800 text-amber-400 text-[11px] font-bold py-1.5 px-3 rounded-lg transition-all flex items-center gap-1 shadow">
-                                    🔑 Jawaban Tim
+                                <button onclick="openFormModal('Jasa Lainnya')" class="bg-slate-900 hover:bg-slate-800 text-amber-400 text-[11px] font-bold py-1.5 px-2.5 rounded-lg transition-all flex items-center gap-1 shadow">
+                                    <i class="fas fa-plus-circle"></i> Buat Tiket
+                                </button>
+                                <button onclick="openPortalTimByBidang('Lainnya')" class="bg-slate-950/20 hover:bg-slate-950/30 text-slate-950 border border-slate-950/30 text-[11px] font-bold py-1.5 px-2.5 rounded-lg transition-all flex items-center gap-1">
+                                    <i class="fas fa-reply"></i> Jawab Tim
                                 </button>
                             </div>
                         </div>
@@ -146,8 +183,11 @@
                                 <i class="fas fa-handshake text-base"></i> Pasca Kontrak
                             </div>
                             <div class="flex items-center gap-1.5">
-                                <button onclick="bukaPortalTim('Pasca Kontrak')" class="bg-slate-900 hover:bg-slate-800 text-amber-400 text-[11px] font-bold py-1.5 px-3 rounded-lg transition-all flex items-center gap-1 shadow">
-                                    🔑 Jawaban Tim
+                                <button onclick="openFormModal('Pasca Kontrak')" class="bg-slate-900 hover:bg-slate-800 text-amber-400 text-[11px] font-bold py-1.5 px-2.5 rounded-lg transition-all flex items-center gap-1 shadow">
+                                    <i class="fas fa-plus-circle"></i> Buat Tiket
+                                </button>
+                                <button onclick="openPortalTimByBidang('Pasca')" class="bg-slate-950/20 hover:bg-slate-950/30 text-slate-950 border border-slate-950/30 text-[11px] font-bold py-1.5 px-2.5 rounded-lg transition-all flex items-center gap-1">
+                                    <i class="fas fa-reply"></i> Jawab Tim
                                 </button>
                             </div>
                         </div>
@@ -174,30 +214,382 @@
 
         </div>
 
+        <!-- DISCLAIMER BANNER -->
+        <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 text-[11px] text-slate-300 flex items-start gap-2">
+            <i class="fas fa-triangle-exclamation text-amber-400 text-sm mt-0.5"></i>
+            <div>
+                <span class="font-bold text-amber-400 uppercase">Disclaimer:</span>
+                Tanggapan Tim KLIK-PBJ bersifat konsultatif dan merupakan bahan pertimbangan, berdasarkan informasi dan dokumen yang disampaikan pada saat konsultasi.
+            </div>
+        </div>
+
+        <!-- TABEL JAWABAN KONSULTASI PUBLIK -->
+        <div class="bg-[#1c2541] border border-slate-800 rounded-xl p-4 md:p-5 space-y-3">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
+                <div>
+                    <h3 class="text-sm font-bold text-amber-400 uppercase flex items-center gap-2">
+                        <i class="fas fa-list"></i> Jawaban Konsultasi Publik
+                    </h3>
+                    <p class="text-[10px] text-slate-400">Daftar pertanyaan dan jawaban resmi (Live Update dari Register Tiket)</p>
+                </div>
+                <div class="relative w-full md:w-64">
+                    <input type="text" id="inputSearch" onkeyup="filterTable()" placeholder="Cari nomor tiket, SKPK..." class="w-full bg-[#0b132b] border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-amber-400">
+                </div>
+            </div>
+
+            <div class="overflow-x-auto rounded-lg border border-slate-800">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-[#0b132b] text-amber-400 font-semibold uppercase text-[11px] border-b border-slate-800">
+                        <tr>
+                            <th class="p-2.5">No. Tiket / Tgl</th>
+                            <th class="p-2.5">Pemohon / SKPK</th>
+                            <th class="p-2.5">Jenis Konsultasi</th>
+                            <th class="p-2.5">Permasalahan</th>
+                            <th class="p-2.5 text-center">Jawaban Tim KLIK-PBJ</th>
+                            <th class="p-2.5 text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyTabelJawaban" class="divide-y divide-slate-800 text-slate-200 text-[11px]">
+                        <!-- Data otomatis di-render JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 
-    <!-- SCRIPT JAVASCRIPT LOGIKA PIN KHUSUS TIM -->
+
+    <!-- MODAL 1: FORMULIR PENGAJUAN KONSULTASI (PERSIS SCREENSHOT 2 ANDA) -->
+    <div id="modalFormKonsultasi" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden overflow-y-auto">
+        <div class="bg-[#1c2541] border border-slate-700 rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl relative my-8">
+            
+            <button onclick="closeFormModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+
+            <div>
+                <h3 id="modalTitleForm" class="text-base font-bold text-amber-400 uppercase tracking-wide">FORMULIR PENGAJUAN KONSULTASI: PENGADAAN BARANG</h3>
+                <p class="text-[11px] text-slate-400">Klinik Layanan Integrasi Konsultasi Pengadaan Barang dan Jasa Kabupaten Simeulue</p>
+            </div>
+
+            <form id="formInputUtama" onsubmit="submitFormKeSheet(event)" class="space-y-4 text-xs">
+                <input type="hidden" id="inputJenisKonsultasi">
+
+                <!-- BAGIAN 1: IDENTITAS PEMOHON -->
+                <div class="bg-[#0b132b]/60 border border-slate-800 p-3.5 rounded-xl space-y-3">
+                    <h4 class="text-[11px] font-bold text-emerald-400 uppercase flex items-center gap-1.5">
+                        <i class="fas fa-user"></i> BAGIAN 1 — IDENTITAS PEMOHON
+                    </h4>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Nama Pemohon *</label>
+                            <input type="text" id="inputNama" required placeholder="Nama lengkap & gelar" class="w-full bg-[#1c2541] border border-slate-700 rounded-lg p-2 text-slate-100 focus:border-emerald-400 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">NIP / NIK *</label>
+                            <input type="text" id="inputNip" required placeholder="NIP ASN / NIK" class="w-full bg-[#1c2541] border border-slate-700 rounded-lg p-2 text-slate-100 focus:border-emerald-400 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Jabatan *</label>
+                            <select id="inputJabatan" required class="w-full bg-[#1c2541] border border-slate-700 rounded-lg p-2 text-slate-100 focus:border-emerald-400 focus:outline-none">
+                                <option value="">-- Pilih Jabatan --</option>
+                                <option value="PPK">PPK (Pejabat Pembuat Komitmen)</option>
+                                <option value="PPTK">PPTK</option>
+                                <option value="Pejabat Pengadaan">Pejabat Pengadaan</option>
+                                <option value="Pokja Pemilihan">Pokja Pemilihan</option>
+                                <option value="Penyedia/KPA/Lainnya">Penyedia / KPA / Lainnya</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Nama SKPK / Instansi *</label>
+                            <input type="text" id="inputSkpk" required placeholder="Contoh: Dinas PU / BPKD" class="w-full bg-[#1c2541] border border-slate-700 rounded-lg p-2 text-slate-100 focus:border-emerald-400 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Nomor WhatsApp Aktif *</label>
+                            <input type="text" id="inputWa" required placeholder="08xxxxxxxxxx" class="w-full bg-[#1c2541] border border-slate-700 rounded-lg p-2 text-slate-100 focus:border-emerald-400 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Alamat Email *</label>
+                            <input type="email" id="inputEmail" required placeholder="email@domain.com" class="w-full bg-[#1c2541] border border-slate-700 rounded-lg p-2 text-slate-100 focus:border-emerald-400 focus:outline-none">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BAGIAN 2: INFORMASI PENGADAAN -->
+                <div class="bg-[#0b132b]/60 border border-slate-800 p-3.5 rounded-xl space-y-3">
+                    <h4 class="text-[11px] font-bold text-emerald-400 uppercase flex items-center gap-1.5">
+                        <i class="fas fa-folder-tree"></i> BAGIAN 2 — INFORMASI PENGADAAN
+                    </h4>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Tahapan Pengadaan yang Dikonsultasikan</label>
+                            <select id="inputTahapan" class="w-full bg-[#1c2541] border border-slate-700 rounded-lg p-2 text-slate-100">
+                                <option value="Perencanaan">Identifikasi kebutuhan / Perencanaan</option>
+                                <option value="Persiapan">Persiapan Pengadaan</option>
+                                <option value="Pemilihan">Pemilihan Penyedia</option>
+                                <option value="Pelaksanaan Kontrak">Pelaksanaan Kontrak</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Metode Pengadaan</label>
+                            <select id="inputMetode" class="w-full bg-[#1c2541] border border-slate-700 rounded-lg p-2 text-slate-100">
+                                <option value="E-Purchasing">E-Purchasing / Katalog Elektronik</option>
+                                <option value="Tender">Tender / Seleksi</option>
+                                <option value="Pengadaan Langsung">Pengadaan Langsung</option>
+                                <option value="Penunjukan Langsung">Penunjukan Langsung</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Nama Paket Pengadaan</label>
+                            <input type="text" id="inputPaket" placeholder="Contoh: Pembangunan Gedung..." class="w-full bg-[#1c2541] border border-slate-700 rounded-lg p-2 text-slate-100">
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Nilai HPS / Pagu Anggaran</label>
+                            <input type="text" id="inputPagu" placeholder="Contoh: Rp 500.000.000" class="w-full bg-[#1c2541] border border-slate-700 rounded-lg p-2 text-slate-100">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BAGIAN 3: SUBSTANSI & METODE KONSULTASI -->
+                <div class="bg-[#0b132b]/60 border border-slate-800 p-3.5 rounded-xl space-y-3">
+                    <h4 class="text-[11px] font-bold text-emerald-400 uppercase flex items-center gap-1.5">
+                        <i class="fas fa-pen-to-square"></i> BAGIAN 3 — SUBSTANSI & METODE KONSULTASI
+                    </h4>
+
+                    <div>
+                        <label class="block text-slate-300 font-semibold mb-1">Uraian Permasalahan *</label>
+                        <textarea id="inputUraian" rows="3" required placeholder="Jelaskan secara kronologis permasalahan yang dihadapi..." class="w-full bg-[#1c2541] border border-slate-700 rounded-lg p-2 text-slate-100 focus:border-emerald-400 focus:outline-none"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-slate-300 font-semibold mb-1">Pertanyaan / Solusi yang Diharapkan *</label>
+                        <textarea id="inputHarapan" rows="2" required placeholder="Jelaskan hal spesifik yang ingin dikonsultasikan..." class="w-full bg-[#1c2541] border border-slate-700 rounded-lg p-2 text-slate-100 focus:border-emerald-400 focus:outline-none"></textarea>
+                    </div>
+                </div>
+
+                <!-- CHECKBOX PERSETUJUAN -->
+                <div class="flex items-start gap-2 bg-[#0b132b]/40 p-2.5 rounded-lg border border-slate-800 text-[10px] text-slate-400">
+                    <input type="checkbox" required class="mt-0.5 rounded border-slate-700 bg-[#1c2541]">
+                    <span>Saya menyatakan bahwa data/informasi yang disampaikan adalah benar dan memahami bahwa konsultasi KLIK-PBJ bersifat konsultatif serta tidak mengambil alih kewenangan pejabat berwenang.</span>
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeFormModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg text-xs font-bold">Batal</button>
+                    <button type="submit" id="btnSubmitForm" class="bg-emerald-400 hover:bg-emerald-500 text-slate-950 font-extrabold px-5 py-2 rounded-lg text-xs transition-all flex items-center gap-1.5 shadow">
+                        <i class="fas fa-paper-plane"></i> Kirim & Registrasi Tiket KLIK-PBJ
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+
+    <!-- MODAL 2: PORTAL JAWAB TIM PBJ (BERBASIS PIN PER BIDANG) -->
+    <div id="modalPortalTim" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-[#1c2541] border border-amber-500/30 rounded-2xl max-w-xl w-full p-6 space-y-4 shadow-2xl relative">
+            
+            <button onclick="closePortalTimModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+
+            <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
+                    <i class="fas fa-user-shield text-lg"></i>
+                </div>
+                <div>
+                    <h3 class="text-base font-bold text-amber-400 uppercase">Portal Jawab Tim PBJ</h3>
+                    <p id="labelBidangAktif" class="text-xs text-slate-400">Bidang: Pengadaan Barang</p>
+                </div>
+            </div>
+
+            <!-- STEP 1: VERIFIKASI PIN -->
+            <div id="stepVerifikasiPin" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Masukkan PIN Otentikasi Tim:</label>
+                    <input type="password" id="inputPinTim" placeholder="Ketik PIN khusus bidang ini..." class="w-full bg-[#0b132b] border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:border-amber-400 focus:outline-none">
+                </div>
+                <button onclick="verifikasiPinTim()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition-all">
+                    Verifikasi PIN
+                </button>
+            </div>
+
+            <!-- STEP 2: FORM PENGISIAN JAWABAN -->
+            <div id="stepJawabTiket" class="space-y-3 hidden text-xs">
+                <div>
+                    <label class="block font-semibold text-slate-300 mb-1">Pilih Tiket Dalam Proses:</label>
+                    <select id="selectTiketProses" onchange="loadDetailTiketPilihan()" class="w-full bg-[#0b132b] border border-slate-700 rounded-xl p-2.5 text-amber-300 font-bold focus:outline-none">
+                    </select>
+                </div>
+
+                <div class="bg-[#0b132b] p-3 rounded-xl border border-slate-800 space-y-1 text-[11px]">
+                    <p class="text-slate-400">Pemohon: <span id="detailPemohonTim" class="text-slate-200 font-bold">-</span></p>
+                    <p class="text-slate-400">Uraian Permasalahan:</p>
+                    <p id="detailUraianTim" class="text-slate-300 italic bg-[#1c2541] p-2 rounded border border-slate-800 max-h-20 overflow-y-auto">-</p>
+                </div>
+
+                <div>
+                    <label class="block font-semibold text-slate-300 mb-1">Nama Petugas / Tim Konsultasi PBJ:</label>
+                    <input type="text" id="inputNamaTim" placeholder="Contoh: Tim Pokja I / Agun, SE" class="w-full bg-[#0b132b] border border-slate-700 rounded-xl p-2 text-slate-200">
+                </div>
+
+                <div>
+                    <label class="block font-semibold text-amber-400 mb-1">Tanggapan / Jawaban Resmi Tim KLIK-PBJ:</label>
+                    <textarea id="inputTextJawabanTim" rows="4" placeholder="Ketikkan tanggapan/solusi resmi di sini..." class="w-full bg-[#0b132b] border border-slate-700 rounded-xl p-2 text-slate-200 focus:border-amber-400 focus:outline-none"></textarea>
+                </div>
+
+                <button onclick="kirimJawabanTim()" id="btnKirimJawaban" class="w-full bg-emerald-400 hover:bg-emerald-500 text-slate-950 font-extrabold py-2.5 rounded-xl text-xs transition-all flex items-center justify-center gap-2">
+                    <i class="fas fa-paper-plane"></i> Simpan & Update Ke Google Sheets
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- JAVASCRIPT LOGIC -->
     <script>
-        // Password/PIN masing-masing bidang (Bisa disesuaikan angka PIN-nya)
+        const WEB_APP_URL = 'GANTI_DENGAN_URL_DEPLOY_WEB_APP_GOOGLE_SCRIPT_ANDA';
+
+        // PIN DUMMY PER BIDANG (Dapat disesuaikan)
         const PIN_BIDANG = {
-            "Pengadaan Barang": "1234",
-            "Jasa Konstruksi": "5678",
-            "Jasa Konsultansi": "9101",
-            "Jasa Lainnya": "1121",
-            "Pasca Kontrak": "3141"
+            'Barang': '1234',
+            'Konstruksi': '2345',
+            'Konsultansi': '3456',
+            'Lainnya': '4567',
+            'Pasca': '5678'
         };
 
-        function bukaPortalTim(bidang) {
-            let pinInput = prompt(`Masukkan PIN Khusus Tim [${bidang}]:`);
-            
-            if (pinInput === PIN_BIDANG[bidang]) {
-                alert(`Akses Diterima! Selamat datang Tim ${bidang}. Silakan isi jawaban.`);
-                // Di sini dapat ditambahkan perintah untuk membuka form/input jawaban Anda
-            } else if (pinInput !== null) {
-                alert("PIN Salah! Anda tidak memiliki akses ke bidang ini.");
+        // DATA DUMMY CONTOH TABEL (Otomatis diganti dari Sheets jika sudah diintegrasikan)
+        let globalDataStore = [
+            { noTiket: 'KLIK-PBJ/2026/09/0001', tglMasuk: '03 November 2026', pemohon: 'Dedi Ediarsa, SE', skpk: 'BAPPEDA Kab. Simeulue', jenis: 'Perencanaan PBJ', permasalahan: 'Mohon konsultasi terkait pemenuhan kewajiban penggunaan PDN dan porsi UMK...', jawaban: 'Sudah ditanggapi oleh Tim PBJ.', status: 'selesai' },
+            { noTiket: 'KLIK-PBJ/2026/09/0002', tglMasuk: '05 September 2026', pemohon: 'ADAM', skpk: 'BAPPEDA', jenis: 'Pengadaan Barang', permasalahan: 'Pertanyaan mengenai proses e-purchasing...', jawaban: '', status: 'proses' },
+            { noTiket: 'KLIK-PBJ/2026/09/0008', tglMasuk: '01 Oktober 2026', pemohon: 'DARMAWAN', skpk: 'Kecamatan', jenis: 'Pengadaan Barang', permasalahan: 'PROSES PEMBANGUNAN JALAN', jawaban: 'Dalam peninjauan berkas.', status: 'selesai' }
+        ];
+
+        let activeBidangTim = '';
+        let filteredTiketTim = [];
+
+        function renderTable(dataList) {
+            let html = '';
+            dataList.forEach(item => {
+                const isSelesai = item.status.toLowerCase().includes('selesai');
+                const badgeStatus = isSelesai 
+                    ? '<span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30">Selesai</span>'
+                    : '<span class="px-2 py-0.5 rounded text-[10px] bg-amber-500/20 text-amber-400 font-bold border border-amber-500/30">Proses</span>';
+
+                html += `
+                    <tr class="hover:bg-slate-800/40 border-b border-slate-800">
+                        <td class="p-2.5 font-bold text-amber-400">${item.noTiket}<br><span class="text-[9px] text-slate-400 font-normal">${item.tglMasuk}</span></td>
+                        <td class="p-2.5 font-semibold">${item.pemohon}<br><span class="text-[9px] text-slate-400 font-normal">${item.skpk}</span></td>
+                        <td class="p-2.5 text-emerald-400 font-semibold">${item.jenis}</td>
+                        <td class="p-2.5 text-slate-300 max-w-xs truncate">${item.permasalahan || '-'}</td>
+                        <td class="p-2.5 text-center">
+                            <button onclick="alert('Jawaban: ${item.jawaban || 'Belum ada jawaban.'}')" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2.5 py-1 rounded text-[10px] font-bold">
+                                <i class="fas fa-eye"></i> Lihat Jawaban
+                            </button>
+                        </td>
+                        <td class="p-2.5 text-center">${badgeStatus}</td>
+                    </tr>
+                `;
+            });
+            document.getElementById('bodyTabelJawaban').innerHTML = html;
+        }
+
+        // BUKA MODAL FORM KONSULTASI (BUAT TIKET)
+        function openFormModal(bidang) {
+            document.getElementById('modalTitleForm').innerText = 'FORMULIR PENGAJUAN KONSULTASI: ' + bidang.toUpperCase();
+            document.getElementById('inputJenisKonsultasi').value = bidang;
+            document.getElementById('modalFormKonsultasi').classList.remove('hidden');
+        }
+
+        function closeFormModal() {
+            document.getElementById('modalFormKonsultasi').classList.add('hidden');
+        }
+
+        // BUKA MODAL JAWAB TIM (MENGGUNAKAN PIN)
+        function openPortalTimByBidang(bidang) {
+            activeBidangTim = bidang;
+            document.getElementById('labelBidangAktif').innerText = 'Bidang: ' + bidang;
+            document.getElementById('stepVerifikasiPin').classList.remove('hidden');
+            document.getElementById('stepJawabTiket').classList.add('hidden');
+            document.getElementById('inputPinTim').value = '';
+            document.getElementById('modalPortalTim').classList.remove('hidden');
+        }
+
+        function closePortalTimModal() {
+            document.getElementById('modalPortalTim').classList.add('hidden');
+        }
+
+        function verifikasiPinTim() {
+            const inputPin = document.getElementById('inputPinTim').value.trim();
+            if (inputPin === PIN_BIDANG[activeBidangTim]) {
+                document.getElementById('stepVerifikasiPin').classList.add('hidden');
+                document.getElementById('stepJawabTiket').classList.remove('hidden');
+
+                // Filter tiket berdasarkan bidang
+                filteredTiketTim = globalDataStore.filter(item => item.jenis.toLowerCase().includes(activeBidangTim.toLowerCase()) && item.status === 'proses');
+
+                const selectTiket = document.getElementById('selectTiketProses');
+                selectTiket.innerHTML = '';
+
+                if (filteredTiketTim.length > 0) {
+                    filteredTiketTim.forEach((item, idx) => {
+                        selectTiket.innerHTML += `<option value="${idx}">${item.noTiket} - ${item.pemohon}</option>`;
+                    });
+                    loadDetailTiketPilihan();
+                } else {
+                    selectTiket.innerHTML = '<option value="">Tidak ada tiket pending</option>';
+                    document.getElementById('detailPemohonTim').innerText = '-';
+                    document.getElementById('detailUraianTim').innerText = 'Semua tiket di bidang ini sudah selesai dijawab.';
+                }
+            } else {
+                alert('PIN Otentikasi Salah! Akses ditolak.');
             }
         }
-    </script>
 
+        function loadDetailTiketPilihan() {
+            const idx = document.getElementById('selectTiketProses').value;
+            if (idx !== "" && filteredTiketTim[idx]) {
+                const item = filteredTiketTim[idx];
+                document.getElementById('detailPemohonTim').innerText = item.pemohon + ' (' + item.skpk + ')';
+                document.getElementById('detailUraianTim').innerText = item.permasalahan || '-';
+            }
+        }
+
+        async function submitFormKeSheet(e) {
+            e.preventDefault();
+            alert('Tiket Konsultasi Berhasil Terkirim!');
+            closeFormModal();
+        }
+
+        async function kirimJawabanTim() {
+            alert('Jawaban Tim Berhasil Disimpan!');
+            closePortalTimModal();
+        }
+
+        function filterTable() {
+            const q = document.getElementById('inputSearch').value.toLowerCase();
+            const filtered = globalDataStore.filter(i => 
+                i.noTiket.toLowerCase().includes(q) || 
+                i.pemohon.toLowerCase().includes(q) || 
+                i.skpk.toLowerCase().includes(q)
+            );
+            renderTable(filtered);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => renderTable(globalDataStore));
+    </script>
 </body>
 </html>
