@@ -26,8 +26,8 @@
     <header class="bg-card rounded-xl p-4 md:p-6 mb-6 shadow-lg flex flex-col md:flex-row items-center justify-between gap-4 border border-slate-700">
         <div class="flex items-center gap-4">
             <div id="banner-logo-container" class="w-16 h-16 bg-slate-800 rounded-lg flex items-center justify-center overflow-hidden border border-slate-600">
-                <i class="fas fa-building-columns text-2xl text-gold hidden" id="default-logo-icon"></i>
-                <img id="custom-logo" src="logo.png" onerror="this.style.display='none'; document.getElementById('default-logo-icon').classList.remove('hidden');" alt="Logo Header" class="w-full h-full object-cover">
+                <i class="fas fa-building-columns text-2xl text-gold" id="default-logo-icon"></i>
+               <img id="custom-logo" src="logo.png" alt="Logo Header" class="w-full h-full object-cover">
             </div>
             <div>
                 <h1 class="text-xl md:text-2xl font-bold text-gold tracking-wide">KLIK-PBJ SIMEULUE</h1>
@@ -237,7 +237,7 @@
                         <th class="p-3">Pemohon / SKPK</th>
                         <th class="p-3">Jenis Konsultasi</th>
                         <th class="p-3">Permasalahan</th>
-                        <th class="p-3 text-center">Jawaban Tim KLIK-PBJ</th>
+                        <th class="p-3">Hasil / Jawaban Tim PBJ</th>
                         <th class="p-3 text-center">Status</th>
                     </tr>
                 </thead>
@@ -249,47 +249,6 @@
             </table>
         </div>
     </section>
-
-    <!-- MODAL DETAIL JAWABAN TIM KLIK-PBJ -->
-    <div id="modal-jawaban" class="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-card border border-slate-700 rounded-2xl w-full max-w-2xl p-6 shadow-2xl relative max-h-[85vh] overflow-y-auto">
-            <button onclick="closeJawabanModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">
-                <i class="fas fa-times"></i>
-            </button>
-            <div class="flex items-center gap-3 border-b border-slate-700 pb-3 mb-4">
-                <div class="bg-amber-500/20 text-amber-400 p-2.5 rounded-lg text-xl">
-                    <i class="fas fa-comment-dots"></i>
-                </div>
-                <div>
-                    <h3 class="text-base font-bold text-gold" id="detail-tiket">DETAIL JAWABAN KONSULTASI</h3>
-                    <p class="text-xs text-slate-400" id="detail-tgl-skpk">-</p>
-                </div>
-            </div>
-
-            <div class="space-y-4 text-xs">
-                <div>
-                    <span class="text-slate-400 uppercase tracking-wider font-semibold block mb-1">Nama Pemohon:</span>
-                    <p class="bg-slate-900/80 p-2.5 rounded-lg border border-slate-800 font-semibold text-slate-200" id="detail-pemohon">-</p>
-                </div>
-                <div>
-                    <span class="text-slate-400 uppercase tracking-wider font-semibold block mb-1">Jenis Konsultasi:</span>
-                    <p class="bg-slate-900/80 p-2.5 rounded-lg border border-slate-800 font-semibold text-emerald-400" id="detail-jenis">-</p>
-                </div>
-                <div>
-                    <span class="text-slate-400 uppercase tracking-wider font-semibold block mb-1">Uraian Permasalahan:</span>
-                    <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-800 leading-relaxed text-slate-300" id="detail-permasalahan">-</div>
-                </div>
-                <div>
-                    <span class="text-amber-400 uppercase tracking-wider font-bold block mb-1"><i class="fas fa-award mr-1"></i> Tanggapan / Jawaban Tim KLIK-PBJ:</span>
-                    <div class="bg-emerald-950/40 p-4 rounded-lg border border-emerald-500/30 text-emerald-100 leading-relaxed font-medium" id="detail-jawaban">-</div>
-                </div>
-            </div>
-
-            <div class="mt-6 text-right">
-                <button onclick="closeJawabanModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-5 py-2 rounded-lg text-xs font-bold">Tutup</button>
-            </div>
-        </div>
-    </div>
 
     <!-- MODAL FORM LENGKAP KONSULTASI PBJ -->
     <div id="modal-form" class="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 md:p-6 z-50 hidden">
@@ -471,13 +430,15 @@
     <script>
         const SHEET_ID = '1PWCqrGBf4h177-uJE97_W0F6cgC3jwman3-Kvrh6ABk';
         const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv`;
+        
+        // URL WEB APP GOOGLE APPS SCRIPT
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbziNsZ8R2S_Tg2LdQv3zK1CkRTzVSvJTzLyiqCYJLAyhF84QjtJCSxpZXbA3oA6dyer/exec';
 
-        let globalDataStore = [];
-
+        // PENGATURAN SIMPAN LOGO PERMANEN KE LOCALSTORAGE BROWSER
         window.addEventListener('DOMContentLoaded', function() {
             loadDataFromSheet();
             
+            // Cek apakah ada logo tersimpan sebelumnya di memori browser
             const savedLogo = localStorage.getItem('klikpbj_banner_logo');
             if (savedLogo) {
                 const customLogo = document.getElementById('custom-logo');
@@ -485,13 +446,13 @@
                 if (customLogo) {
                     customLogo.src = savedLogo;
                     customLogo.classList.remove('hidden');
-                    customLogo.style.display = 'block';
                 }
                 if (defaultIcon) defaultIcon.classList.add('hidden');
             }
         });
 
-        document.getElementById('banner-upload')?.addEventListener('change', function(e) {
+        // Event listener saat user memilih file logo baru
+        document.getElementById('banner-upload').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
@@ -500,12 +461,11 @@
                     const customLogo = document.getElementById('custom-logo');
                     const defaultIcon = document.getElementById('default-logo-icon');
                     
-                    if (customLogo) {
-                        customLogo.src = base64Image;
-                        customLogo.classList.remove('hidden');
-                        customLogo.style.display = 'block';
-                    }
+                    customLogo.src = base64Image;
+                    customLogo.classList.remove('hidden');
                     if (defaultIcon) defaultIcon.classList.add('hidden');
+                    
+                    // Simpan gambar secara permanen ke memori browser lokal
                     localStorage.setItem('klikpbj_banner_logo', base64Image);
                 };
                 reader.readAsDataURL(file);
@@ -545,24 +505,6 @@
         function closeForm() {
             document.getElementById('modal-form').classList.add('hidden');
             document.getElementById('consultation-form').reset();
-        }
-
-        function showDetailJawaban(index) {
-            const item = globalDataStore[index];
-            if (!item) return;
-
-            document.getElementById('detail-tiket').innerText = 'TIKET: ' + item.noTiket;
-            document.getElementById('detail-tgl-skpk').innerText = item.tglMasuk + ' | SKPK: ' + item.skpk;
-            document.getElementById('detail-pemohon').innerText = item.pemohon;
-            document.getElementById('detail-jenis').innerText = item.jenis;
-            document.getElementById('detail-permasalahan').innerText = item.permasalahan;
-            document.getElementById('detail-jawaban').innerText = item.jawaban;
-
-            document.getElementById('modal-jawaban').classList.remove('hidden');
-        }
-
-        function closeJawabanModal() {
-            document.getElementById('modal-jawaban').classList.add('hidden');
         }
 
         async function submitForm(e) {
@@ -628,25 +570,14 @@
                     };
 
                     let tableHtml = '';
-                    globalDataStore = [];
 
                     for (let i = 1; i < rows.length; i++) {
                         const row = rows[i];
                         if (!row || row.length < 2 || !row[1]) continue;
 
                         total++;
-                        
-                        // KOREKSI INDEX SESUAI KODE SHEETS TERBARU
-                        const noTiket = row[1] || '-';                       // Kolom B
-                        const tglMasuk = row[2] || '-';                      // Kolom C
-                        const pemohonRaw = (row[3] || '').trim();           // Kolom D
-                        const skpk = (row[7] || '-').trim();                // Kolom H
-                        const jenis = (row[9] || '-').trim();               // Kolom J (Jenis Konsultasi)
-                        const permasalahan = (row[12] || '-').trim();        // Kolom M (Uraian Singkat Permasalahan)
-                        const status = (row[17] || '').trim().toLowerCase(); // Kolom R (Status)
-                        const jawaban = (row[19] || 'Belum ada jawaban').trim(); // Kolom T (Hasil/Tindak Lanjut)
-
-                        const pemohon = pemohonRaw !== '' ? pemohonRaw : (skpk !== '-' ? skpk : 'Pemohon');
+                        const status = (row[12] || '').trim().toLowerCase();
+                        const jenis = (row[9] || '').trim();
 
                         if (status.includes('selesai')) selesai++;
                         else proses++;
@@ -659,26 +590,17 @@
                             }
                         });
 
-                        const dataIndex = globalDataStore.length;
-                        globalDataStore.push({
-                            noTiket, tglMasuk, pemohon, skpk, jenis, permasalahan, jawaban, status
-                        });
-
                         const statusBadge = status.includes('selesai') 
                             ? '<span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30">Selesai</span>'
                             : '<span class="px-2 py-0.5 rounded text-[10px] bg-amber-500/20 text-amber-400 font-bold border border-amber-500/30">Proses</span>';
 
                         tableHtml += `
                             <tr class="hover:bg-slate-800/40 transition-colors">
-                                <td class="p-3 font-semibold text-amber-300">${noTiket}<br><span class="text-[10px] text-slate-400">${tglMasuk}</span></td>
-                                <td class="p-3 font-medium">${pemohon}<br><span class="text-[10px] text-slate-400">${skpk}</span></td>
-                                <td class="p-3 font-semibold text-emerald-400">${jenis}</td>
-                                <td class="p-3 text-slate-300 max-w-xs truncate">${permasalahan}</td>
-                                <td class="p-3 text-center">
-                                    <button onclick="showDetailJawaban(${dataIndex})" class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all inline-flex items-center gap-1.5">
-                                        <i class="fas fa-eye"></i> Lihat Jawaban
-                                    </button>
-                                </td>
+                                <td class="p-3 font-semibold text-amber-300">${row[1] || '-'}<br><span class="text-[10px] text-slate-400">${row[2] || '-'}</span></td>
+                                <td class="p-3 font-medium">${row[3] || '-'}<br><span class="text-[10px] text-slate-400">${row[7] || '-'}</span></td>
+                                <td class="p-3">${row[9] || '-'}</td>
+                                <td class="p-3 text-slate-300 max-w-xs truncate">${row[10] || '-'}</td>
+                                <td class="p-3 text-slate-300 max-w-xs truncate">${row[11] || 'Belum ada jawaban'}</td>
                                 <td class="p-3 text-center">${statusBadge}</td>
                             </tr>
                         `;
