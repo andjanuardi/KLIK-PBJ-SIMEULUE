@@ -434,7 +434,7 @@
         // URL WEB APP GOOGLE APPS SCRIPT
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbziNsZ8R2S_Tg2LdQv3zK1CkRTzVSvJTzLyiqCYJLAyhF84QjtJCSxpZXbA3oA6dyer/exec';
 
-        // MEMUAT LOGO TERSIAPAN SAAT HALAMAN DIBUKA
+        // MEMUAT LOGO TERPREFERENSI SAAT HALAMAN DIBUKA
         window.addEventListener('DOMContentLoaded', function() {
             loadDataFromSheet();
             
@@ -451,7 +451,7 @@
             }
         });
 
-        // HANDLER UPLOAD LOGO BANNER
+        // HANDLER UPLOAD BANNER
         document.getElementById('banner-upload')?.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
@@ -579,16 +579,23 @@
 
                         total++;
                         
-                        // PEMBACAAN INDEKS KOLOM SESUAI STRUCTURE GOOGLE SHEETS
-                        const status = (row[12] || '').trim().toLowerCase(); // Kolom M: Status
-                        const jenis = (row[9] || '').trim();               // Kolom J: Jenis Konsultasi
-                        const permasalahan = (row[10] || '-').trim();     // Kolom K: Media / Permasalahan
-                        const jawaban = (row[11] || 'Belum ada jawaban').trim(); // Kolom L: Dokumen / Jawaban
+                        // PEMBACAAN POSISI KOLOM PERBAIKAN AKURAT
+                        const noTiket = row[1] || '-';                      // Kolom B
+                        const tglMasuk = row[2] || '-';                     // Kolom C
+                        const pemohonRaw = (row[3] || '').trim();          // Kolom D
+                        const skpk = (row[7] || '-').trim();               // Kolom H
+                        const jenis = (row[9] || '-').trim();              // Kolom J (Jenis Konsultasi)
+                        const permasalahan = (row[11] || '-').trim();       // Kolom L (Permasalahan)
+                        const jawaban = (row[12] || 'Belum ada jawaban').trim(); // Kolom M (Jawaban)
+                        const status = (row[13] || '').trim().toLowerCase();     // Kolom N (Status)
+
+                        // Penanganan Tampilan Nama Pemohon Kosong
+                        const pemohon = pemohonRaw !== '' ? pemohonRaw : 'Pemohon';
 
                         if (status.includes('selesai')) selesai++;
                         else proses++;
 
-                        // Rekapitulasi per Jenis Layanan
+                        // Rekapitulasi per Kategori Layanan
                         Object.keys(catData).forEach(k => {
                             if (jenis.toLowerCase().includes(k.toLowerCase())) {
                                 catData[k].tot++;
@@ -603,9 +610,9 @@
 
                         tableHtml += `
                             <tr class="hover:bg-slate-800/40 transition-colors">
-                                <td class="p-3 font-semibold text-amber-300">${row[1] || '-'}<br><span class="text-[10px] text-slate-400">${row[2] || '-'}</span></td>
-                                <td class="p-3 font-medium">${row[3] || '-'}<br><span class="text-[10px] text-slate-400">${row[7] || '-'}</span></td>
-                                <td class="p-3 font-semibold text-emerald-400">${jenis || '-'}</td>
+                                <td class="p-3 font-semibold text-amber-300">${noTiket}<br><span class="text-[10px] text-slate-400">${tglMasuk}</span></td>
+                                <td class="p-3 font-medium">${pemohon}<br><span class="text-[10px] text-slate-400">${skpk}</span></td>
+                                <td class="p-3 font-semibold text-emerald-400">${jenis}</td>
                                 <td class="p-3 text-slate-300 max-w-xs truncate">${permasalahan}</td>
                                 <td class="p-3 text-slate-300 max-w-xs truncate">${jawaban}</td>
                                 <td class="p-3 text-center">${statusBadge}</td>
