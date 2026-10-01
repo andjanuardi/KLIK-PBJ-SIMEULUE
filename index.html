@@ -26,8 +26,9 @@
     <header class="bg-card rounded-xl p-4 md:p-6 mb-6 shadow-lg flex flex-col md:flex-row items-center justify-between gap-4 border border-slate-700">
         <div class="flex items-center gap-4">
             <div id="banner-logo-container" class="w-16 h-16 bg-slate-800 rounded-lg flex items-center justify-center overflow-hidden border border-slate-600">
-    <img id="custom-logo" src="URL_LINK_GAMBAR_LOGO_ANDA" alt="Logo Header" class="w-full h-full object-cover">
-</div>
+                <i class="fas fa-building-columns text-2xl text-gold" id="default-logo-icon"></i>
+                <img id="custom-logo" src="" alt="Logo Header" class="w-full h-full object-cover hidden">
+            </div>
             <div>
                 <h1 class="text-xl md:text-2xl font-bold text-gold tracking-wide">KLIK-PBJ SIMEULUE</h1>
                 <p class="text-sm md:text-base text-slate-300 font-medium">Klinik Layanan Integrasi Konsultasi Pengadaan Barang dan Jasa</p>
@@ -46,7 +47,7 @@
         <!-- LEFT SIDEBAR: Visi, Pengaturan & Rekapitulasi -->
         <div class="lg:col-span-4 flex flex-col gap-6">
 
-            <!-- VISI KABUPATEN SIMEULUE 2030 (SUDAH DIPINDAHKAN KE ATAS PENGATURAN BANNER) -->
+            <!-- VISI KABUPATEN SIMEULUE 2030 -->
             <div class="p-4 bg-card border border-slate-700 rounded-xl text-center shadow-lg">
                 <span class="text-xs text-slate-400 uppercase tracking-wider block mb-1">
                     Visi Kabupaten Simeulue Tahun 2030
@@ -430,8 +431,46 @@
         const SHEET_ID = '1PWCqrGBf4h177-uJE97_W0F6cgC3jwman3-Kvrh6ABk';
         const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv`;
         
-        // URL WEB APP TERBARU BERHASIL DIHUBUNGKAN
+        // URL WEB APP GOOGLE APPS SCRIPT
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbziNsZ8R2S_Tg2LdQv3zK1CkRTzVSvJTzLyiqCYJLAyhF84QjtJCSxpZXbA3oA6dyer/exec';
+
+        // PENGATURAN SIMPAN LOGO PERMANEN KE LOCALSTORAGE BROWSER
+        window.addEventListener('DOMContentLoaded', function() {
+            loadDataFromSheet();
+            
+            // Cek apakah ada logo tersimpan sebelumnya di memori browser
+            const savedLogo = localStorage.getItem('klikpbj_banner_logo');
+            if (savedLogo) {
+                const customLogo = document.getElementById('custom-logo');
+                const defaultIcon = document.getElementById('default-logo-icon');
+                if (customLogo) {
+                    customLogo.src = savedLogo;
+                    customLogo.classList.remove('hidden');
+                }
+                if (defaultIcon) defaultIcon.classList.add('hidden');
+            }
+        });
+
+        // Event listener saat user memilih file logo baru
+        document.getElementById('banner-upload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    const base64Image = evt.target.result;
+                    const customLogo = document.getElementById('custom-logo');
+                    const defaultIcon = document.getElementById('default-logo-icon');
+                    
+                    customLogo.src = base64Image;
+                    customLogo.classList.remove('hidden');
+                    if (defaultIcon) defaultIcon.classList.add('hidden');
+                    
+                    // Simpan gambar secara permanen ke memori browser lokal
+                    localStorage.setItem('klikpbj_banner_logo', base64Image);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
 
         function parseCSV(text) {
             let p = '', c = '', r = [];
@@ -612,25 +651,6 @@
                 row.style.display = text.includes(input) ? '' : 'none';
             });
         }
-
-        // Custom Banner Upload Handler
-        document.getElementById('banner-upload').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    const customLogo = document.getElementById('custom-logo');
-                    const defaultIcon = document.getElementById('default-logo-icon');
-                    customLogo.src = evt.target.result;
-                    customLogo.classList.remove('hidden');
-                    defaultIcon.classList.add('hidden');
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        // Auto load data saat pertama kali buka
-        window.addEventListener('DOMContentLoaded', loadDataFromSheet);
     </script>
 </body>
 </html>
