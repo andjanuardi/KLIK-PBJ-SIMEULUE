@@ -9,7 +9,7 @@ import { Button, Card, Field, Reveal, inputCls } from "../components/ui";
 import SearchSelect from "../components/SearchSelect";
 import { formatRupiah, maskNip, maskWa } from "../lib/masking";
 import { DAFTAR_JABATAN, DAFTAR_SKPK } from "../lib/referensi";
-import { createTicket, markVerified } from "../lib/store";
+import { createTicket } from "../lib/store";
 import { BENTUK_KONSULTASI, METODE, TAHAPAN } from "../types";
 import { getAllLayanan } from "../lib/store";
 
@@ -148,7 +148,6 @@ export default function Ajukan() {
     const { setuju: _s, ...rest } = v;
     const t = createTicket({ ...rest, nilai: digitsOnly(v.nilai ?? "") || undefined });
     localStorage.removeItem(DRAFT_KEY);
-    markVerified(t.kode);
     nav(`/sukses/${t.kode}`, { state: { wa: v.wa } });
   };
 

@@ -25,7 +25,7 @@ export default function Home() {
       <Hero tickets={tickets} loading={loading} />
       <main className="mx-auto max-w-6xl space-y-10 px-4 py-10">
         <TiketTable tickets={tickets} loading={loading} />
-        <Dokumen />
+        <Dokumen loading={loading} />
       </main>
     </div>
   );

@@ -19,5 +19,9 @@
 
 ## Akun Demo
 
-- Admin: `admin@pbj.go.id` / `admin123`
-- Operator: `operator@pbj.go.id` / `operator123`
+- Admin: `admin@simeuluekab.go.id` / `admin123`
+- Tim Pengadaan Barang: `tim-barang@simeuluekab.go.id` / `tim123`
+- Tim Jasa Konstruksi: `tim-konstruksi@simeuluekab.go.id` / `tim123`
+- Tim Jasa Konsultansi: `tim-konsultansi@simeuluekab.go.id` / `tim123`
+- Tim Jasa Lainnya: `tim-lainnya@simeuluekab.go.id` / `tim123`
+- Tim Pasca Kontrak: `tim-pascakontrak@simeuluekab.go.id` / `tim123`

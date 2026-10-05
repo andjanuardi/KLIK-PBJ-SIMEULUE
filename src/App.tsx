@@ -22,7 +22,7 @@ function ScrollTop() {
 export default function App() {
   useEffect(() => { ensureSeed(); }, []);
   return (
-    <BrowserRouter basename={import.meta.env.BASE_URL}>
+    <BrowserRouter>
       <ScrollTop />
       <div className="flex min-h-screen flex-col">
         <Navbar />

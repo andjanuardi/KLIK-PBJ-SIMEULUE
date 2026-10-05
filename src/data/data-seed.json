@@ -5,7 +5,7 @@
   "admins": [
     {
       "id": "u-seed-0",
-      "email": "admin@pbj.go.id",
+      "email": "admin@simeuluekab.go.id",
       "pass": "admin123",
       "nama": "Admin PBJ",
       "role": "admin",
@@ -13,17 +13,54 @@
     },
     {
       "id": "u-seed-1",
-      "email": "operator@pbj.go.id",
-      "pass": "operator123",
-      "nama": "Operator PBJ",
-      "role": "operator",
+      "email": "tim-barang@simeuluekab.go.id",
+      "pass": "tim123",
+      "nama": "Tim Pengadaan Barang",
+      "role": "tim",
+      "layanan": "Pengadaan Barang",
+      "aktif": true
+    },
+    {
+      "id": "u-seed-2",
+      "email": "tim-konstruksi@simeuluekab.go.id",
+      "pass": "tim123",
+      "nama": "Tim Jasa Konstruksi",
+      "role": "tim",
+      "layanan": "Jasa Konstruksi",
+      "aktif": true
+    },
+    {
+      "id": "u-seed-3",
+      "email": "tim-konsultansi@simeuluekab.go.id",
+      "pass": "tim123",
+      "nama": "Tim Jasa Konsultansi",
+      "role": "tim",
+      "layanan": "Jasa Konsultansi",
+      "aktif": true
+    },
+    {
+      "id": "u-seed-4",
+      "email": "tim-lainnya@simeuluekab.go.id",
+      "pass": "tim123",
+      "nama": "Tim Jasa Lainnya",
+      "role": "tim",
+      "layanan": "Jasa Lainnya",
+      "aktif": true
+    },
+    {
+      "id": "u-seed-5",
+      "email": "tim-pascakontrak@simeuluekab.go.id",
+      "pass": "tim123",
+      "nama": "Tim Pasca Kontrak",
+      "role": "tim",
+      "layanan": "Pasca Kontrak",
       "aktif": true
     }
   ],
   "tickets": [
     {
       "id": "seed-0",
-      "kode": "KLN-240101",
+      "kode": "PB-00001",
       "nama": "Ahmad Fauzi",
       "nip": "1982010012345678",
       "jabatan": "PPK",
@@ -46,7 +83,7 @@
     },
     {
       "id": "seed-1",
-      "kode": "KLN-240238",
+      "kode": "JK-00001",
       "nama": "Siti Rahma",
       "nip": "1982020712345678",
       "jabatan": "PPTK",
@@ -77,7 +114,7 @@
     },
     {
       "id": "seed-2",
-      "kode": "KLN-240375",
+      "kode": "JT-00001",
       "nama": "Budi Santoso",
       "nip": "1982030412345678",
       "jabatan": "Bendahara",
@@ -108,7 +145,7 @@
     },
     {
       "id": "seed-3",
-      "kode": "KLN-240512",
+      "kode": "JL-00001",
       "nama": "Dewi Lestari",
       "nip": "1982040112345678",
       "jabatan": "Kasubbag Umum",
@@ -131,7 +168,7 @@
     },
     {
       "id": "seed-4",
-      "kode": "KLN-240649",
+      "kode": "PK-00001",
       "nama": "Andri Pratama",
       "nip": "1982050812345678",
       "jabatan": "Staf Pengadaan",
@@ -162,7 +199,7 @@
     },
     {
       "id": "seed-5",
-      "kode": "KLN-240786",
+      "kode": "PB-00002",
       "nama": "Rina Marlina",
       "nip": "1982060512345678",
       "jabatan": "PPK",
@@ -193,7 +230,7 @@
     },
     {
       "id": "seed-6",
-      "kode": "KLN-240923",
+      "kode": "JK-00002",
       "nama": "Yusuf Hidayat",
       "nip": "1982070212345678",
       "jabatan": "PPTK",
@@ -216,7 +253,7 @@
     },
     {
       "id": "seed-7",
-      "kode": "KLN-241060",
+      "kode": "JT-00002",
       "nama": "Nina Kurnia",
       "nip": "1982080912345678",
       "jabatan": "Bendahara",
@@ -247,7 +284,7 @@
     },
     {
       "id": "seed-8",
-      "kode": "KLN-241197",
+      "kode": "JL-00002",
       "nama": "Tamsil Anwar",
       "nip": "1982090612345678",
       "jabatan": "Kasubbag Umum",
@@ -278,7 +315,7 @@
     },
     {
       "id": "seed-9",
-      "kode": "KLN-241334",
+      "kode": "PK-00002",
       "nama": "Fitri Handayani",
       "nip": "1982010312345678",
       "jabatan": "Staf Pengadaan",
@@ -301,7 +338,7 @@
     },
     {
       "id": "seed-x-0",
-      "kode": "KLN-310500",
+      "kode": "PB-00003",
       "nama": "Ahmad Fauzi",
       "nip": "1991000712345678",
       "jabatan": "PPK",
@@ -331,7 +368,7 @@
     },
     {
       "id": "seed-x-1",
-      "kode": "KLN-310711",
+      "kode": "JK-00003",
       "nama": "Dewi Lestari",
       "nip": "1991010712345678",
       "jabatan": "PPK",
@@ -353,7 +390,7 @@
     },
     {
       "id": "seed-x-2",
-      "kode": "KLN-310922",
+      "kode": "JT-00003",
       "nama": "Yusuf Hidayat",
       "nip": "1991020712345678",
       "jabatan": "PPK",
@@ -383,7 +420,7 @@
     },
     {
       "id": "seed-x-3",
-      "kode": "KLN-311133",
+      "kode": "JL-00003",
       "nama": "Fitri Handayani",
       "nip": "1991030712345678",
       "jabatan": "PPK",
@@ -405,7 +442,7 @@
     },
     {
       "id": "seed-x-4",
-      "kode": "KLN-311344",
+      "kode": "PK-00003",
       "nama": "Budi Santoso",
       "nip": "1991040712345678",
       "jabatan": "PPK",
@@ -435,7 +472,7 @@
     },
     {
       "id": "seed-x-5",
-      "kode": "KLN-311555",
+      "kode": "PB-00004",
       "nama": "Rina Marlina",
       "nip": "1991050712345678",
       "jabatan": "PPK",
@@ -457,7 +494,7 @@
     },
     {
       "id": "seed-x-6",
-      "kode": "KLN-311766",
+      "kode": "JK-00004",
       "nama": "Tamsil Anwar",
       "nip": "1991060712345678",
       "jabatan": "PPK",
@@ -487,7 +524,7 @@
     },
     {
       "id": "seed-x-7",
-      "kode": "KLN-311977",
+      "kode": "JT-00004",
       "nama": "Siti Rahma",
       "nip": "1991070712345678",
       "jabatan": "PPK",
@@ -509,7 +546,7 @@
     },
     {
       "id": "seed-x-8",
-      "kode": "KLN-312188",
+      "kode": "JL-00004",
       "nama": "Andri Pratama",
       "nip": "1991080712345678",
       "jabatan": "PPK",
@@ -539,7 +576,7 @@
     },
     {
       "id": "seed-x-9",
-      "kode": "KLN-312399",
+      "kode": "PK-00004",
       "nama": "Nina Kurnia",
       "nip": "1991090712345678",
       "jabatan": "PPK",
@@ -558,6 +595,238 @@
       "createdDaysAgo": 19,
       "updatedDaysAgo": 19,
       "menungguPetugas": true
+    }
+  ],
+  "referensi": {
+    "_note": "Sumber kanonis tunggal untuk daftar pilihan. types.ts, lib/referensi.ts, dan lib/store.ts membaca dari sini (dengan fallback bila kunci hilang).",
+    "layanan": [
+      "Pengadaan Barang",
+      "Jasa Konstruksi",
+      "Jasa Konsultansi",
+      "Jasa Lainnya",
+      "Pasca Kontrak"
+    ],
+    "tahapan": [
+      "Perencanaan",
+      "Persiapan",
+      "Pemilihan",
+      "Pelaksanaan",
+      "Pasca Kontrak"
+    ],
+    "metode": [
+      "E-Purchasing",
+      "Tender",
+      "Tender Cepat",
+      "Seleksi",
+      "Pengadaan Langsung",
+      "Penunjukan Langsung",
+      "Swakelola"
+    ],
+    "bentukKonsultasi": [
+      "Jawaban/penjelasan tertulis",
+      "Konsultasi melalui WhatsApp",
+      "Konsultasi tatap muka",
+      "Konsultasi melalui video conference"
+    ],
+    "kodePrefix": {
+      "Pengadaan Barang": "PB",
+      "Jasa Konstruksi": "JK",
+      "Jasa Konsultansi": "JT",
+      "Jasa Lainnya": "JL",
+      "Pasca Kontrak": "PK"
+    },
+    "skpk": [
+      "Badan Kepegawaian dan Pengembangan Sumber Daya Manusia",
+      "Badan Kesatuan Bangsa dan Politik",
+      "Badan Penanggulangan Bencana Daerah",
+      "Badan Pengelolaan Keuangan Daerah",
+      "Badan Perencanaan Pembangunan Daerah",
+      "Dinas Kelautan dan Perikanan",
+      "Dinas Kepemudaan dan Olah Raga",
+      "Dinas Kependudukan dan Pencatatan Sipil",
+      "Dinas Kesehatan",
+      "Dinas Komunikasi, Informasi dan Persandian",
+      "Dinas Lingkungan Hidup",
+      "Dinas Pariwisata dan Kebudayaan",
+      "Dinas Pekerjaan Umum dan Penataan Ruang",
+      "Dinas Pemberdayaan Masyarakat dan Desa",
+      "Dinas Pemberdayaan Perempuan, Perlindungan Anak dan Keluarga Berencana",
+      "Dinas Penanaman Modal dan Pelayanan Terpadu Satu Pintu",
+      "Dinas Pendidikan",
+      "Dinas Perhubungan",
+      "Dinas Perindustrian, Perdagangan, Koperasi dan UKM",
+      "Dinas Perkebunan, Peternakan dan Kesehatan Hewan",
+      "Dinas Perpustakaan dan Kearsipan",
+      "Dinas Pertanahan",
+      "Dinas Pertanian dan Pangan",
+      "Dinas Sosial",
+      "Dinas Syariat Islam dan Pendidikan Dayah",
+      "Dinas Tenaga Kerja Dan Transmigrasi",
+      "Inspektorat",
+      "Satuan Polisi Pamong Praja dan Wilayatul Hisbah",
+      "Sekretariat Baitul Mal",
+      "Sekretariat Daerah",
+      "Sekretariat Dewan Perwakilan Rakyat Kabupaten",
+      "Sekretariat Kecamatan Alafan",
+      "Sekretariat Kecamatan Salang",
+      "Sekretariat Kecamatan Simeulue Barat",
+      "Sekretariat Kecamatan Simeulue Cut",
+      "Sekretariat Kecamatan Simeulue Tengah",
+      "Sekretariat Kecamatan Simeulue Timur",
+      "Sekretariat Kecamatan Teluk Dalam",
+      "Sekretariat Kecamatan Teupah Barat",
+      "Sekretariat Kecamatan Teupah Selatan",
+      "Sekretariat Kecamatan Teupah Tengah",
+      "Sekretariat Majelis Adat Aceh",
+      "Sekretariat Majelis Pendidikan Daerah",
+      "Sekretariat Majelis Permusyawaratan Ulama",
+      "UPTD Rumah Sakit Umum Daerah"
+    ],
+    "jabatan": [
+      "PA (Pengguna Anggaran)",
+      "KPA (Kuasa Pengguna Anggaran)",
+      "PPK (Pejabat Pembuat Komitmen)",
+      "Pejabat Pengadaan",
+      "Pokja Pemilihan",
+      "PPTK (Pejabat Pelaksana Teknis Kegiatan)",
+      "Bendahara",
+      "Pengelola PBJ (Pengadaan Barang/Jasa)",
+      "Pejabat/Pegawai SKPK (Satuan Kerja Perangkat Kabupaten/Kota)",
+      "Penyedia",
+      "Pelaku Usaha",
+      "Lainnya"
+    ]
+  },
+  "settings": {
+    "_note": "Pengaturan awal dashboard; disalin ke localStorage saat pertama load (tidak menimpa perubahan admin).",
+    "heroTitle": "KLIK-PBJ SIMEULUE",
+    "heroSubtitle": "Klinik Layanan Integrasi Konsultasi Pengadaan Barang dan Jasa",
+    "infoText": "Visi Kabupaten Simeulue Tahun 2030: Mewujudkan Simeulue yang bermartabat & pusat pertumbuhan ekonomi biru.",
+    "disclaimerText": "Tanggapan Tim KLIK-PBJ bersifat konsultatif dan merupakan bahan pertimbangan, berdasarkan informasi dan dokumen yang disampaikan pada saat konsultasi. Tanggapan ini tidak mengambil alih kewenangan maupun tanggung jawab pejabat yang berwenang. Pihak yang berkonsultasi dapat memiliki pendapat berbeda dan wajib memastikan keputusan yang diambil sesuai ketentuan peraturan perundang-undangan. Segala keputusan, tindakan, dan konsekuensi atas pelaksanaannya menjadi tanggung jawab pihak/pejabat yang berwenang.",
+    "disclaimerAktif": true,
+    "jamLayanan": "Senin–Jumat • 08.00–16.00 WIB",
+    "layananCustom": []
+  },
+  "docs": [
+    {
+      "id": "doc-d1",
+      "judul": "REGULASI UTAMA PBJ",
+      "kategori": "Dasar Hukum",
+      "tag": "Dasar Hukum",
+      "desc": "Perpres 16/2018, 12/2021, 46/2025 & 17/2023.",
+      "tipe": "url",
+      "url": "https://drive.google.com/drive/folders/1ccLWnoI9Kv1fZ1BS8XWRq6dMEfb8kel-",
+      "createdDaysAgo": 0
+    },
+    {
+      "id": "doc-d2",
+      "judul": "KELEMBAGAAN DAN SDM",
+      "kategori": "Dasar Hukum",
+      "tag": "Dasar Hukum",
+      "desc": "UKPBJ, SDM & rencana aksi.",
+      "tipe": "url",
+      "url": "https://drive.google.com/drive/folders/1G2fD1hripGETh1PMlo44WHRO202n8hq6",
+      "createdDaysAgo": 0
+    },
+    {
+      "id": "doc-d3",
+      "judul": "TKDN/P3DN",
+      "kategori": "Dasar Hukum",
+      "tag": "Dasar Hukum",
+      "desc": "UU 3/2014, PP 29/2018, Inpres 2/2022 & Permenperin 35/2025.",
+      "tipe": "url",
+      "url": "https://drive.google.com/drive/folders/1ZQ1gqFg2yTWe5sNDxhn3CkaDxE7c0P62",
+      "createdDaysAgo": 0
+    },
+    {
+      "id": "doc-d4",
+      "judul": "KATALOG DAN DIGITAL PBJ",
+      "kategori": "Panduan",
+      "tag": "Panduan",
+      "desc": "Katalog elektronik & transformasi digital.",
+      "tipe": "url",
+      "url": "https://drive.google.com/drive/folders/1yI6m5uXyDfmjoq1WYwEbhlO0-4tQqMOF",
+      "createdDaysAgo": 0
+    },
+    {
+      "id": "doc-d5",
+      "judul": "PELAKSANAAN MELALUI PENYEDIA",
+      "kategori": "Panduan",
+      "tag": "Panduan",
+      "desc": "Perlem 12/2021 & 4/2024.",
+      "tipe": "url",
+      "url": "https://drive.google.com/drive/folders/1QvUUDMRrACW-NFR9DP0lX3-zxi9YMiWg",
+      "createdDaysAgo": 0
+    },
+    {
+      "id": "doc-d6",
+      "judul": "PERENCANAAN",
+      "kategori": "Panduan",
+      "tag": "Panduan",
+      "desc": "Perlem 11/2021 pedoman perencanaan.",
+      "tipe": "url",
+      "url": "https://drive.google.com/drive/folders/1Q8egMytqgUfqgcoOiezJACd2UGm5ePK1",
+      "createdDaysAgo": 0
+    },
+    {
+      "id": "doc-d7",
+      "judul": "SWAKELOLA DAN PENGADAAN KHUSUS",
+      "kategori": "Panduan",
+      "tag": "Panduan",
+      "desc": "Swakelola & BLUD.",
+      "tipe": "url",
+      "url": "https://drive.google.com/drive/folders/1GahDqAsObpoSMokO__IpWUac1LgZD9oU",
+      "createdDaysAgo": 0
+    },
+    {
+      "id": "doc-d8",
+      "judul": "Pedoman Pelaksanaan APBD Tahun 2026.pdf",
+      "kategori": "Panduan",
+      "tag": "Panduan",
+      "desc": "Pedoman pelaksanaan APBD 2026.",
+      "tipe": "url",
+      "url": "https://drive.google.com/file/d/1DnwdxtBHf6PBk8b2eeGdEgC3tKGhPWjf/view",
+      "createdDaysAgo": 0
+    },
+    {
+      "id": "doc-d9",
+      "judul": "Pemberitahuan Perubahan Kedua Perpres 16 Tahun 2028.pdf",
+      "kategori": "Dasar Hukum",
+      "tag": "Dasar Hukum",
+      "desc": "Pemberitahuan perubahan kedua Perpres 16.",
+      "tipe": "url",
+      "url": "https://drive.google.com/file/d/1Scf2yrLi5zou0Xk8NDWVdaU0_p16cYDD/view",
+      "createdDaysAgo": 0
+    },
+    {
+      "id": "doc-d10",
+      "judul": "Perbedaan Perpres 2021 dengan 2025.pdf",
+      "kategori": "Dasar Hukum",
+      "tag": "Dasar Hukum",
+      "desc": "Matriks perbedaan Perpres 2021 vs 2025.",
+      "tipe": "url",
+      "url": "https://drive.google.com/file/d/1S-QC3gdpeE9ScnL5-s3n4aTnBmASs9m_/view",
+      "createdDaysAgo": 0
+    },
+    {
+      "id": "doc-d11",
+      "judul": "SURAT LKPP 2025_WAJIB MIKOM KOMPETISI.pdf",
+      "kategori": "Dasar Hukum",
+      "tag": "Dasar Hukum",
+      "desc": "Surat LKPP kewajiban mikom kompetisi.",
+      "tipe": "url",
+      "url": "https://drive.google.com/file/d/1t7X2cmops42pYOdgbVRKJ5jWBmA0qlcP/view",
+      "createdDaysAgo": 0
+    },
+    {
+      "id": "doc-d12",
+      "judul": "JDIH LKPP – sumber regulasi resmi.txt",
+      "kategori": "Lainnya",
+      "tag": "Lainnya",
+      "desc": "Tautan sumber regulasi resmi JDIH LKPP.",
+      "tipe": "url",
+      "url": "https://drive.google.com/file/d/1yYYFU5MOQQNVzdnvhB2lAhYs0b4VIFOP/view",
+      "createdDaysAgo": 0
     }
   ]
 }

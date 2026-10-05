@@ -1,37 +1,18 @@
-export const LAYANAN = [
-  "Pengadaan Barang",
-  "Jasa Konstruksi",
-  "Jasa Konsultansi",
-  "Jasa Lainnya",
-  "Pasca Kontrak",
-] as const;
+import { SEED_BENTUK_KONSULTASI, SEED_LAYANAN, SEED_METODE, SEED_TAHAPAN } from "./lib/seed-data";
+
+/**
+ * Nilai kanonis dari data-seed.json `referensi` (via lib/seed-data, modul daun
+ * tanpa siklus impor). Tetap tuple agar cocok dengan `z.enum`.
+ */
+export const LAYANAN = SEED_LAYANAN as unknown as readonly [string, ...string[]];
 export type Layanan = (typeof LAYANAN)[number];
 
-export const TAHAPAN = [
-  "Perencanaan",
-  "Persiapan",
-  "Pemilihan",
-  "Pelaksanaan",
-  "Pasca Kontrak",
-] as const;
+export const TAHAPAN = SEED_TAHAPAN as unknown as readonly [string, ...string[]];
 
-export const METODE = [
-  "E-Purchasing",
-  "Tender",
-  "Tender Cepat",
-  "Seleksi",
-  "Pengadaan Langsung",
-  "Penunjukan Langsung",
-  "Swakelola",
-] as const;
+export const METODE = SEED_METODE as unknown as readonly [string, ...string[]];
 
 export type StatusTiket = "Dalam Proses" | "Selesai" | "Perlu Klarifikasi";
-export const BENTUK_KONSULTASI = [
-  "Konsultasi melalui WhatsApp",
-  "Konsultasi tatap muka",
-  "Konsultasi melalui video conference",
-  "Jawaban/penjelasan tertulis",
-] as const;
+export const BENTUK_KONSULTASI = SEED_BENTUK_KONSULTASI as unknown as readonly [string, ...string[]];
 export type BentukKonsultasi = (typeof BENTUK_KONSULTASI)[number];
 
 export interface Reply {
@@ -74,6 +55,8 @@ export interface AdminUser {
   email: string;
   pass: string;
   nama: string;
-  role: "admin" | "operator";
+  role: "admin" | "tim";
+  /** scope layanan untuk role "tim" (tampil sebagai "Tim <layanan>"); kosong = semua layanan (legacy) */
+  layanan?: string;
   aktif?: boolean;
 }

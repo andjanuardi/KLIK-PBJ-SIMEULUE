@@ -1,8 +1,6 @@
 import seed from "../data/data-seed.json";
-import type { AdminUser, Ticket } from "../types";
+import type { Ticket } from "../types";
 import { loadTickets, saveTickets } from "./store";
-
-export const SEED_ADMINS: AdminUser[] = seed.admins as AdminUser[];
 
 interface SeedReply {
   id: string;

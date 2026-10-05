@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Download, FileUp, Pencil, Search, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
-import { Button, Card, Empty, Field, inputCls } from "../ui";
+import { Button, Card, ConfirmDialog, Empty, Field, inputCls } from "../ui";
 import { addDoc, deleteDoc, loadDocs, updateDoc } from "../../lib/store";
 import type { DocItem } from "../../lib/store";
 
@@ -34,6 +34,7 @@ export default function DocsTab() {
   const [eDesc, setEDesc] = useState("");
   const [eUrl, setEUrl] = useState("");
   const [eErr, setEErr] = useState("");
+  const [deleting, setDeleting] = useState<DocItem | null>(null);
 
   const refresh = () => setDocs(loadDocs());
 
@@ -186,7 +187,7 @@ export default function DocsTab() {
                       <span className="rounded-xl bg-slate-100 px-3 py-1.5 text-[11px] font-bold text-slate-400">Info saja</span>
                     )}
                     <button onClick={() => mulaiEdit(d)} className="cursor-pointer rounded-lg p-2 text-slate-500 hover:bg-slate-100" title="Edit"><Pencil size={14} /></button>
-                    <button onClick={() => { if (confirm(`Hapus "${d.judul}"?`)) { deleteDoc(d.id); refresh(); } }} className="cursor-pointer rounded-lg p-2 text-rose-500 hover:bg-rose-50" title="Hapus"><Trash2 size={14} /></button>
+                    <button onClick={() => setDeleting(d)} className="cursor-pointer rounded-lg p-2 text-rose-500 hover:bg-rose-50" title="Hapus"><Trash2 size={14} /></button>
                   </div>
                 )}
               </motion.div>
@@ -194,6 +195,14 @@ export default function DocsTab() {
           </AnimatePresence>
         </div>
       </Card>
+      <ConfirmDialog
+        open={!!deleting}
+        title="Hapus dokumen?"
+        message={deleting ? `"${deleting.judul}" akan dihapus permanen dan tidak tampil lagi di halaman publik.` : undefined}
+        confirmLabel="Ya, hapus"
+        onCancel={() => setDeleting(null)}
+        onConfirm={() => { if (deleting) { deleteDoc(deleting.id); setDeleting(null); refresh(); } }}
+      />
     </div>
   );
 }

@@ -5,7 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import TicketThread from "../components/TicketThread";
 import { Button, Card, Field, LayananBadge, Reveal, StatusBadge, inputCls } from "../components/ui";
 import { formatJam, formatTanggal, last4 } from "../lib/masking";
-import { getTicket, isVerified, markVerified } from "../lib/store";
+import { getTicket } from "../lib/store";
 import type { StatusTiket, Ticket } from "../types";
 
 function Timeline({ status }: { status: StatusTiket }) {
@@ -58,27 +58,16 @@ export default function Lacak() {
     if (!k) { setErr("Masukkan kode tiket terlebih dahulu."); return; }
     const t = getTicket(k);
     if (!t) { setErr("Kode tiket tidak ditemukan. Periksa kembali."); setTicket(null); return; }
-    // sesi terverifikasi (mis. baru saja mengajukan) → lewati verifikasi
-    if (isVerified(k)) { setTicket(t); return; }
     if (vg.length !== 4) { setErr("Wajib masukkan 4 digit terakhir No. WA / NIK untuk membuka tiket."); setTicket(null); return; }
     const okWa = last4(t.wa) === vg;
     const okNip = last4(t.nip) === vg;
     if (!okWa && !okNip) { setErr("4 digit verifikasi tidak cocok dengan WA / NIK tiket ini."); setTicket(null); return; }
-    markVerified(k);
     setTicket(t);
   };
 
   useEffect(() => {
     const k = params.get("kode");
-    if (k) {
-      const ku = k.toUpperCase();
-      setKode(ku);
-      // auto-cari bila sesi ini sudah terverifikasi (alur Sukses → Lacak)
-      if (isVerified(ku)) {
-        const t = getTicket(ku);
-        if (t) setTicket(t);
-      }
-    }
+    if (k) setKode(k.toUpperCase());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
 
@@ -94,7 +83,7 @@ export default function Lacak() {
       </Reveal>
       <Card className="mt-6 p-6">
         <div className="grid gap-3 sm:grid-cols-[1fr_160px_auto]">
-          <Field label="Kode Tiket *"><input value={kode} onChange={(e) => setKode(e.target.value.toUpperCase())} onKeyDown={onEnter} placeholder="KLN-XXXXXX" className={`${inputCls()} text-center font-mono font-bold tracking-widest`} /></Field>
+          <Field label="Kode Tiket *"><input value={kode} onChange={(e) => setKode(e.target.value.toUpperCase())} onKeyDown={onEnter} placeholder="cth: PB-00001" className={`${inputCls()} text-center font-mono font-bold tracking-widest`} /></Field>
           <Field label="4 Digit WA/NIK *"><input value={verif} onChange={(e) => setVerif(e.target.value.replace(/\D/g, "").slice(0, 4))} onKeyDown={onEnter} inputMode="numeric" placeholder="7890" className={`${inputCls()} text-center font-mono font-bold tracking-widest`} /></Field>
           <div className="flex items-end"><Button onClick={() => cari()}><Search size={15} /> Lacak</Button></div>
         </div>

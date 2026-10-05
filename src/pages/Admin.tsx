@@ -4,13 +4,13 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Card, Empty, LayananBadge, Reveal, Skeleton, StatusBadge } from "../components/ui";
 import { formatJam, formatTanggal } from "../lib/masking";
-import { clearAdminSession, deleteTicket, getAdminSession, loadTickets, petugasReply } from "../lib/store";
+import { clearAdminSession, deleteTicket, getAdminSession, getAllLayanan, loadTickets, petugasReply } from "../lib/store";
 import type { StatusTiket, Ticket } from "../types";
 import DocsTab from "../components/admin/DocsTab";
 import SettingsTab from "../components/admin/SettingsTab";
 import UsersTab from "../components/admin/UsersTab";
 
-function KonsultasiTab() {
+function KonsultasiTab({ scope }: { scope?: string }) {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
   const [active, setActive] = useState<string | null>(null);
@@ -35,15 +35,22 @@ function KonsultasiTab() {
     return () => clearTimeout(t);
   }, [q, filter, loading]);
 
+  // scope tim: hanya tiket layanannya; admin / tim legacy (tanpa layanan) = semua
+  const scopeGone = !!scope && !getAllLayanan().includes(scope);
+  const visible = useMemo(
+    () => (scope && !scopeGone ? tickets.filter((t) => t.jenisLayanan === scope) : scopeGone ? [] : tickets),
+    [tickets, scope, scopeGone]
+  );
+
   const counts = useMemo(() => ({
-    tindakLanjut: tickets.filter((t) => t.menungguPetugas).length,
-    proses: tickets.filter((t) => t.status === "Dalam Proses").length,
-  }), [tickets]);
+    tindakLanjut: visible.filter((t) => t.menungguPetugas).length,
+    proses: visible.filter((t) => t.status === "Dalam Proses").length,
+  }), [visible]);
 
   const FILTERS = ["Perlu Tindak Lanjut", "Semua", "Dalam Proses", "Perlu Klarifikasi", "Selesai"];
 
   const rows = useMemo(() => {
-    const out = tickets.filter((t) => {
+    const out = visible.filter((t) => {
       if (filter === "Perlu Tindak Lanjut" && !t.menungguPetugas) return false;
       if (filter !== "Semua" && filter !== "Perlu Tindak Lanjut" && t.status !== filter) return false;
       if (q.trim()) {
@@ -60,8 +67,8 @@ function KonsultasiTab() {
     // aktivitas terakhir dulu (balasan / perubahan status)
     out.sort((a, b) => +new Date(b.updatedAt ?? b.createdAt) - +new Date(a.updatedAt ?? a.createdAt));
     return out;
-  }, [tickets, filter, q]);
-  const t = rows.find((r) => r.kode === active) ?? tickets.find((r) => r.kode === active) ?? null;
+  }, [visible, filter, q]);
+  const t = rows.find((r) => r.kode === active) ?? visible.find((r) => r.kode === active) ?? null;
 
   const refresh = () => setTickets(loadTickets().sort((a, b) => +new Date(b.updatedAt ?? b.createdAt) - +new Date(a.updatedAt ?? a.createdAt)));
   const busy = loading || filtering;
@@ -75,7 +82,8 @@ function KonsultasiTab() {
 
   return (
     <div>
-      <p className="text-sm text-slate-500">{tickets.length} tiket • balas, ubah status & publish ringkasan ke tabel publik.</p>
+      <p className="text-sm text-slate-500">{visible.length} tiket{scope && !scopeGone ? ` • khusus layanan ${scope}` : ""} • balas, ubah status & publish ringkasan ke tabel publik.</p>
+      {scopeGone && <p className="mt-2 rounded-xl bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-800 ring-1 ring-amber-200">Layanan "{scope}" sudah tidak tersedia. Hubungi admin untuk menetapkan layanan baru.</p>}
       <div className="mt-4 flex flex-wrap items-center gap-2">
         {FILTERS.map((s) => (
           <button key={s} onClick={() => setFilter(s)} className={`cursor-pointer rounded-full px-4 py-1.5 text-xs font-bold ring-1 transition ${filter === s ? (s === "Perlu Tindak Lanjut" ? "bg-amber-500 text-white ring-amber-500" : "bg-slate-900 text-white ring-slate-900") : "bg-white text-slate-600 ring-slate-200"}`}>
@@ -194,7 +202,7 @@ export default function Admin() {
       <Reveal>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">Dashboard {isAdmin ? "Admin" : "Operator"}</h1>
+            <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">Dashboard {isAdmin ? "Admin" : session?.layanan ? `Tim ${session.layanan}` : "Tim"}</h1>
             <p className="text-sm text-slate-500">Halo, {session?.nama || session?.email} 👋</p>
           </div>
           <Button variant="ghost" size="sm" onClick={() => { clearAdminSession(); nav("/"); }}><LogOut size={14} /> Keluar</Button>
@@ -210,7 +218,7 @@ export default function Admin() {
       <div className="mt-4">
         <AnimatePresence mode="wait">
           <motion.div key={tab} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
-            {tab === "konsultasi" && <KonsultasiTab />}
+            {tab === "konsultasi" && <KonsultasiTab scope={!isAdmin ? session?.layanan : undefined} />}
             {tab === "pengguna" && (isAdmin ? <UsersTab /> : <Empty title="Akses ditolak" desc="Hanya admin yang dapat mengelola pengguna." />)}
             {tab === "pengaturan" && (isAdmin ? <SettingsTab /> : <Empty title="Akses ditolak" desc="Hanya admin yang dapat mengubah pengaturan." />)}
             {tab === "dokumen" && (isAdmin ? <DocsTab /> : <Empty title="Akses ditolak" desc="Hanya admin yang dapat mengelola dokumen." />)}

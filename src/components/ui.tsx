@@ -1,4 +1,6 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { Trash2 } from "lucide-react";
+import { useEffect } from "react";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import { clsx } from "clsx";
 
@@ -122,5 +124,62 @@ export function Empty({ title, desc }: { title: string; desc?: string }) {
       <p className="font-bold text-slate-700">{title}</p>
       {desc && <p className="max-w-sm text-sm text-slate-500">{desc}</p>}
     </motion.div>
+  );
+}
+
+export function ConfirmDialog({ open, title, message, confirmLabel = "Hapus", onConfirm, onCancel }: {
+  open: boolean;
+  title: string;
+  message?: string;
+  confirmLabel?: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+}) {
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onCancel(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, onCancel]);
+
+  return (
+    <AnimatePresence>
+      {open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onCancel}
+            className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+          />
+          <motion.div
+            role="alertdialog"
+            aria-modal="true"
+            initial={{ opacity: 0, scale: 0.94, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: 8 }}
+            transition={{ type: "spring", stiffness: 380, damping: 28 }}
+            className="relative w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl"
+          >
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-50 text-rose-600 ring-1 ring-rose-200">
+              <Trash2 size={22} />
+            </div>
+            <p className="mt-3 text-base font-extrabold text-slate-900">{title}</p>
+            {message && <p className="mt-1 text-sm leading-relaxed text-slate-500">{message}</p>}
+            <div className="mt-5 flex gap-2">
+              <Button variant="ghost" onClick={onCancel} className="flex-1">Batal</Button>
+              <button
+                onClick={onConfirm}
+                autoFocus
+                className="flex-1 cursor-pointer rounded-xl bg-rose-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-rose-600/25 transition-colors hover:bg-rose-700"
+              >
+                {confirmLabel}
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
   );
 }

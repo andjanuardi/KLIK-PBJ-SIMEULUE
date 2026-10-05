@@ -1,5 +1,7 @@
-// Generator data-seed.json — mirror dari lib/seed.ts, dijalankan sekali via bun.
-import { writeFileSync } from "node:fs";
+// Generator data-seed.json — regen tiket dummy via bun. Blok non-tiket
+// (admins, referensi, settings, docs, jawabanStandar) dipertahankan dari file
+// yang sudah ada agar perubahan data manual tidak hilang.
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 
 const SKPK = [
   "Dinas Pendidikan",
@@ -25,6 +27,12 @@ const PAKET = [
   "Pemeliharaan Jaringan Irigasi",
 ];
 const LAYANAN = ["Pengadaan Barang", "Jasa Konstruksi", "Jasa Konsultansi", "Jasa Lainnya", "Pasca Kontrak"];
+const PREFIX = { "Pengadaan Barang": "PB", "Jasa Konstruksi": "JK", "Jasa Konsultansi": "JT", "Jasa Lainnya": "JL", "Pasca Kontrak": "PK" };
+const _seq = {};
+function nextKode(jenis) {
+  _seq[jenis] = (_seq[jenis] ?? 0) + 1;
+  return `${PREFIX[jenis]}-${String(_seq[jenis]).padStart(5, "0")}`;
+}
 const BENTUK4 = ["Jawaban/penjelasan tertulis", "Konsultasi melalui WhatsApp", "Konsultasi tatap muka", "Konsultasi melalui video conference"];
 const URAIAN =
   "Kami mengalami kendala pada tahap pemilihan penyedia karena terdapat perbedaan interpretasi spesifikasi teknis pada dokumen pengadaan. Mohon arahan langkah yang tepat agar proses tetap sesuai ketentuan Perpres 16/2018 beserta perubahannya dan tidak menimbulkan temuan audit di kemudian hari. ";
@@ -33,9 +41,10 @@ const JAWABAN =
 
 const tickets = NAMA.map((nama, i) => {
   const selesai = i % 3 !== 0;
+  const jenisLayanan = LAYANAN[i % LAYANAN.length];
   return {
     id: `seed-${i}`,
-    kode: `KLN-${String(240101 + i * 137).padStart(6, "0").slice(-6)}`,
+    kode: nextKode(jenisLayanan),
     nama,
     nip: `19820${(i % 9) + 1}0${(i * 37) % 10}12345678`.slice(0, 18),
     jabatan: ["PPK", "PPTK", "Bendahara", "Kasubbag Umum", "Staf Pengadaan"][i % 5],
@@ -63,7 +72,7 @@ for (let k = 0; k < 10; k++) {
   const selesai = k % 2 === 0;
   tickets.push({
     id: `seed-x-${k}`,
-    kode: `KLN-${String(310500 + k * 211).padStart(6, "0").slice(-6)}`,
+    kode: nextKode(LAYANAN[k % LAYANAN.length]),
     nama: NAMA[(k * 3) % NAMA.length],
     nip: `19910${k}0712345678`.slice(0, 18),
     jabatan: "PPK",
@@ -86,15 +95,27 @@ for (let k = 0; k < 10; k++) {
   });
 }
 
+const prev = existsSync("src/data/data-seed.json")
+  ? JSON.parse(readFileSync("src/data/data-seed.json", "utf8"))
+  : {};
+
 const data = {
-  _note: "Data dummy KLIK-PBJ. Offset hari dihitung saat load agar selalu segar. JAWABAN_REF = teks jawaban standar.",
-  jawabanStandar: JAWABAN,
-  ringkasanSuffix: "...",
+  _note: prev._note ?? "Data dummy KLIK-PBJ. Offset hari dihitung saat load agar selalu segar. JAWABAN_REF = teks jawaban standar.",
+  jawabanStandar: prev.jawabanStandar ?? JAWABAN,
+  ringkasanSuffix: prev.ringkasanSuffix ?? "...",
   admins: [
-    { id: "u-seed-0", email: "admin@pbj.go.id", pass: "admin123", nama: "Admin PBJ", role: "admin", aktif: true },
-    { id: "u-seed-1", email: "operator@pbj.go.id", pass: "operator123", nama: "Operator PBJ", role: "operator", aktif: true },
+    { id: "u-seed-0", email: "admin@simeuluekab.go.id", pass: "admin123", nama: "Admin PBJ", role: "admin", aktif: true },
+    { id: "u-seed-1", email: "tim-barang@simeuluekab.go.id", pass: "tim123", nama: "Tim Pengadaan Barang", role: "tim", layanan: "Pengadaan Barang", aktif: true },
+    { id: "u-seed-2", email: "tim-konstruksi@simeuluekab.go.id", pass: "tim123", nama: "Tim Jasa Konstruksi", role: "tim", layanan: "Jasa Konstruksi", aktif: true },
+    { id: "u-seed-3", email: "tim-konsultansi@simeuluekab.go.id", pass: "tim123", nama: "Tim Jasa Konsultansi", role: "tim", layanan: "Jasa Konsultansi", aktif: true },
+    { id: "u-seed-4", email: "tim-lainnya@simeuluekab.go.id", pass: "tim123", nama: "Tim Jasa Lainnya", role: "tim", layanan: "Jasa Lainnya", aktif: true },
+    { id: "u-seed-5", email: "tim-pascakontrak@simeuluekab.go.id", pass: "tim123", nama: "Tim Pasca Kontrak", role: "tim", layanan: "Pasca Kontrak", aktif: true },
   ],
   tickets,
+  // blok data kanonis — hanya dibuat saat belum ada (jangan timpa manual edit)
+  ...(prev.referensi ? { referensi: prev.referensi } : {}),
+  ...(prev.settings ? { settings: prev.settings } : {}),
+  ...(prev.docs ? { docs: prev.docs } : {}),
 };
 
 writeFileSync("src/data/data-seed.json", JSON.stringify(data, null, 2) + "\n");
