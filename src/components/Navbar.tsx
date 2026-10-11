@@ -1,9 +1,10 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, ShieldCheck, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import logoDefault from "../assets/logo.png";
-import { getAdminSession, loadSettings } from "../lib/store";
+import { getAdminSession } from "../lib/store";
+import { getSettings } from "../lib/api";
 
 const LINKS = [
   { to: "/", label: "Beranda" },
@@ -17,7 +18,12 @@ export default function Navbar() {
   const { pathname } = useLocation();
   const isHome = pathname === "/";
   const admin = getAdminSession();
-  const logo = loadSettings().logoDataUrl || logoDefault;
+  const [logo, setLogo] = useState(logoDefault);
+  useEffect(() => {
+    let on = true;
+    getSettings().then((s) => { if (on && s.logoDataUrl) setLogo(s.logoDataUrl as string); }).catch(() => {});
+    return () => { on = false; };
+  }, []);
   return (
     <motion.header
       initial={{ y: -64, opacity: 0 }}

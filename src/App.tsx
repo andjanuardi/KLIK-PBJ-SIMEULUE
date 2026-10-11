@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
-import { ensureSeed } from "./lib/seed";
 import Admin from "./pages/Admin";
 import Ajukan from "./pages/Ajukan";
 import Detail from "./pages/Detail";
@@ -20,7 +19,6 @@ function ScrollTop() {
 }
 
 export default function App() {
-  useEffect(() => { ensureSeed(); }, []);
   return (
     <BrowserRouter>
       <ScrollTop />

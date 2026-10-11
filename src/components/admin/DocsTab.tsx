@@ -1,32 +1,24 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Download, FileUp, Pencil, Search, Trash2 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Card, ConfirmDialog, Empty, Field, inputCls } from "../ui";
-import { addDoc, deleteDoc, loadDocs, updateDoc } from "../../lib/store";
+import { ApiError, addDoc, deleteDoc, getDocs, updateDoc, uploadFile } from "../../lib/api";
 import type { DocItem } from "../../lib/store";
 
 const KATEGORI = ["Dasar Hukum", "Template", "Panduan", "Etika", "Lainnya"];
 
-function readFile(f: File, cb: (v: { name: string; dataUrl: string; size: string } | null, err?: string) => void): void {
-  if (!["application/pdf", "image/png", "image/jpeg", "image/jpg"].includes(f.type)) { cb(null, "Hanya PDF / PNG / JPG."); return; }
-  if (f.size > 2 * 1024 * 1024) { cb(null, "Maksimal 2MB (batas penyimpanan browser)."); return; }
-  const r = new FileReader();
-  r.onload = () => {
-    const size = f.size > 1024 * 1024 ? `${(f.size / 1024 / 1024).toFixed(2)} MB` : `${Math.max(1, Math.round(f.size / 1024))} KB`;
-    cb({ name: f.name, dataUrl: String(r.result), size });
-  };
-  r.readAsDataURL(f);
-}
-
 export default function DocsTab() {
-  const [docs, setDocs] = useState<DocItem[]>(() => loadDocs());
+  const [docs, setDocs] = useState<DocItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loadErr, setLoadErr] = useState("");
   const [judul, setJudul] = useState("");
   const [kategori, setKategori] = useState("Panduan");
   const [desc, setDesc] = useState("");
-  const [file, setFile] = useState<{ name: string; dataUrl: string; size: string } | null>(null);
+  const [fileObj, setFileObj] = useState<File | null>(null);
   const [mode, setMode] = useState<"file" | "url">("file");
   const [url, setUrl] = useState("");
   const [err, setErr] = useState("");
+  const [busy, setBusy] = useState(false);
   const [q, setQ] = useState("");
   const [editing, setEditing] = useState<string | null>(null);
   const [eJudul, setEJudul] = useState("");
@@ -35,42 +27,67 @@ export default function DocsTab() {
   const [eUrl, setEUrl] = useState("");
   const [eErr, setEErr] = useState("");
   const [deleting, setDeleting] = useState<DocItem | null>(null);
+  const [editBusy, setEditBusy] = useState(false);
+  const [deletingBusy, setDeletingBusy] = useState(false);
 
-  const refresh = () => setDocs(loadDocs());
+  const refresh = async () => {
+    try {
+      setDocs(await getDocs());
+      setLoadErr("");
+    } catch (e) {
+      setLoadErr(e instanceof ApiError ? e.message : "Gagal memuat dokumen.");
+    }
+  };
 
-  const filtered = useMemo(() => {
+  useEffect(() => {
+    let on = true;
+    setLoading(true);
+    refresh().finally(() => { if (on) setLoading(false); });
+    return () => { on = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const filtered = (() => {
     const s = q.trim().toLowerCase();
     if (!s) return docs;
     return docs.filter((d) => `${d.judul} ${d.kategori} ${d.desc}`.toLowerCase().includes(s));
-  }, [docs, q]);
+  })();
 
   const onFile = (f: File | undefined) => {
     setErr("");
     if (!f) return;
-    readFile(f, (v, e) => {
-      if (e) { setErr(e); return; }
-      setFile(v);
-    });
+    if (!["application/pdf", "image/png", "image/jpeg", "image/jpg"].includes(f.type)) { setErr("Hanya PDF / PNG / JPG."); return; }
+    if (f.size > 2 * 1024 * 1024) { setErr("Maksimal 2MB."); return; }
+    setFileObj(f);
   };
 
-  const tambah = () => {
+  const tambah = async () => {
+    if (busy) return;
     setErr("");
     if (judul.trim().length < 3) { setErr("Judul minimal 3 karakter."); return; }
-    if (mode === "file" && !file) { setErr("Wajib lampirkan file (PDF / PNG / JPG, maks 2MB)."); return; }
-    if (mode === "url") {
-      if (!/^https?:\/\/.+\..+/.test(url.trim())) { setErr("Wajib isi URL valid, cth: https://contoh.go.id/dok.pdf"); return; }
-    }
+    if (mode === "file" && !fileObj) { setErr("Wajib lampirkan file (PDF / PNG / JPG, maks 2MB)."); return; }
+    if (mode === "url" && !/^https?:\/\/.+\..+/.test(url.trim())) { setErr("Wajib isi URL valid, cth: https://contoh.go.id/dok.pdf"); return; }
+    setBusy(true);
     try {
-      if (mode === "file" && file) {
-        addDoc({ judul: judul.trim(), kategori, tag: kategori, desc: desc.trim() || "Dokumen referensi PBJ.", tipe: "file", fileName: file.name, dataUrl: file.dataUrl, size: file.size });
+      if (mode === "file" && fileObj) {
+        // nama file = judul dokumen (ekstensi tidak digandakan)
+        const m = /\.([A-Za-z0-9]{1,5})$/.exec(fileObj.name.trim());
+        const ext = m ? `.${m[1].toLowerCase()}` : ".pdf";
+        const base = judul.trim().slice(0, 120);
+        const newName = base.toLowerCase().endsWith(ext) ? base : base + ext;
+        const up = await uploadFile(fileObj, newName);
+        const mb = fileObj.size > 1024 * 1024 ? `${(fileObj.size / 1024 / 1024).toFixed(2)} MB` : `${Math.max(1, Math.round(fileObj.size / 1024))} KB`;
+        await addDoc({ judul: judul.trim(), kategori, desc: desc.trim() || "Dokumen referensi PBJ.", tipe: "file", fileName: newName, driveId: up.fileId, size: mb });
       } else {
-        addDoc({ judul: judul.trim(), kategori, tag: kategori, desc: desc.trim() || "Dokumen referensi PBJ.", tipe: "url", url: url.trim() });
+        await addDoc({ judul: judul.trim(), kategori, desc: desc.trim() || "Dokumen referensi PBJ.", tipe: "url", url: url.trim() });
       }
-    } catch {
-      setErr("Gagal menyimpan — penyimpanan penuh. Hapus dokumen ber-file besar.");
+    } catch (e) {
+      setErr(e instanceof ApiError ? e.message : "Gagal menyimpan.");
+      setBusy(false);
       return;
     }
-    setJudul(""); setDesc(""); setFile(null); setUrl("");
+    setBusy(false);
+    setJudul(""); setDesc(""); setFileObj(null); setUrl("");
     refresh();
   };
 
@@ -83,22 +100,25 @@ export default function DocsTab() {
     setEErr("");
   };
 
-  const simpanEdit = (d: DocItem) => {
+  const simpanEdit = async (d: DocItem) => {
+    if (editBusy) return;
     setEErr("");
     if (eJudul.trim().length < 3) { setEErr("Judul minimal 3 karakter."); return; }
     if (d.tipe === "url" && !/^https?:\/\/.+\..+/.test(eUrl.trim())) { setEErr("URL tidak valid."); return; }
+    setEditBusy(true);
     try {
-      updateDoc(d.id, {
+      await updateDoc(d.id, {
         judul: eJudul.trim(),
         kategori: eKategori,
-        tag: eKategori,
         desc: eDesc.trim() || "Dokumen referensi PBJ.",
         ...(d.tipe === "url" ? { url: eUrl.trim() } : {}),
       });
-    } catch {
-      setEErr("Gagal menyimpan — penyimpanan penuh.");
+    } catch (e) {
+      setEErr(e instanceof ApiError ? e.message : "Gagal menyimpan.");
+      setEditBusy(false);
       return;
     }
+    setEditBusy(false);
     setEditing(null);
     refresh();
   };
@@ -126,8 +146,8 @@ export default function DocsTab() {
           {mode === "file" ? (
             <div>
               <input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => onFile(e.target.files?.[0])} className="w-full cursor-pointer rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-3 text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-slate-900 file:px-3 file:py-1.5 file:text-xs file:font-bold file:text-white" />
-              <p className="mt-1 text-[11px] text-slate-400">PDF / PNG / JPG • maks 2MB</p>
-              {file && <p className="mt-1.5 text-xs font-semibold text-emerald-700">📎 {file.name} • {file.size}</p>}
+              <p className="mt-1 text-[11px] text-slate-400">PDF / PNG / JPG • maks 2MB • tersimpan di Drive</p>
+              {fileObj && <p className="mt-1.5 text-xs font-semibold text-emerald-700">📎 {fileObj.name}</p>}
             </div>
           ) : (
             <div>
@@ -137,7 +157,7 @@ export default function DocsTab() {
           )}
         </div>
         {err && <p className="rounded-xl bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-700 ring-1 ring-rose-200">{err}</p>}
-        <Button onClick={tambah} className="w-full"><FileUp size={14} /> Tambah Dokumen</Button>
+        <Button onClick={tambah} disabled={busy} className="w-full"><FileUp size={14} /> {busy ? "Menyimpan…" : "Tambah Dokumen"}</Button>
       </Card>
       <Card className="overflow-hidden">
         <div className="border-b border-slate-100 p-4">
@@ -148,7 +168,9 @@ export default function DocsTab() {
           <p className="mt-1.5 text-[11px] text-slate-400">{filtered.length} dari {docs.length} dokumen</p>
         </div>
         <div className="max-h-[60vh] divide-y divide-slate-100 overflow-y-auto">
-          {filtered.length === 0 && <div className="p-4"><Empty title="Tidak ada dokumen" desc="Coba kata kunci lain." /></div>}
+          {loading && <p className="p-5 text-xs text-slate-400">Memuat dokumen…</p>}
+          {!loading && loadErr && <div className="p-4"><Empty title="Gagal memuat dokumen" desc={loadErr} /></div>}
+          {!loading && !loadErr && filtered.length === 0 && <div className="p-4"><Empty title="Tidak ada dokumen" desc="Coba kata kunci lain." /></div>}
           <AnimatePresence initial={false}>
             {filtered.map((d) => (
               <motion.div key={d.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -169,8 +191,8 @@ export default function DocsTab() {
                     {d.tipe === "file" && <p className="text-[11px] text-slate-400">Berkas: {d.fileName} ({d.size ?? "-"}) — ganti file belum didukung, hapus & tambah baru bila perlu.</p>}
                     {eErr && <p className="rounded-xl bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-700 ring-1 ring-rose-200">{eErr}</p>}
                     <div className="flex gap-2">
-                      <Button size="sm" onClick={() => simpanEdit(d)}>Simpan</Button>
-                      <Button size="sm" variant="ghost" onClick={() => setEditing(null)}>Batal</Button>
+                      <Button size="sm" onClick={() => simpanEdit(d)} disabled={editBusy}>{editBusy ? "Menyimpan…" : "Simpan"}</Button>
+                      <Button size="sm" variant="ghost" onClick={() => setEditing(null)} disabled={editBusy}>Batal</Button>
                     </div>
                   </motion.div>
                 ) : (
@@ -179,8 +201,8 @@ export default function DocsTab() {
                       <p className="truncate text-sm font-bold text-slate-800">{d.judul}</p>
                       <p className="truncate text-[11px] text-slate-400">{d.kategori} • {d.desc} {d.tipe === "file" && d.fileName ? `• ${d.fileName} (${d.size ?? ""})` : ""}{d.tipe === "url" && d.url ? `• ${d.url}` : ""}</p>
                     </div>
-                    {d.tipe === "file" && d.dataUrl ? (
-                      <a href={d.dataUrl} download={d.fileName ?? d.judul} className="inline-flex items-center gap-1 rounded-xl bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-700 ring-1 ring-emerald-200 hover:bg-emerald-100"><Download size={13} /> Unduh</a>
+                    {d.tipe === "file" && d.url ? (
+                      <a href={d.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 rounded-xl bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-700 ring-1 ring-emerald-200 hover:bg-emerald-100"><Download size={13} /> Unduh</a>
                     ) : d.tipe === "url" && d.url ? (
                       <a href={d.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 rounded-xl bg-blue-50 px-3 py-1.5 text-xs font-bold text-blue-700 ring-1 ring-blue-200 hover:bg-blue-100"><Download size={13} /> Buka</a>
                     ) : (
@@ -198,10 +220,22 @@ export default function DocsTab() {
       <ConfirmDialog
         open={!!deleting}
         title="Hapus dokumen?"
-        message={deleting ? `"${deleting.judul}" akan dihapus permanen dan tidak tampil lagi di halaman publik.` : undefined}
+        message={deleting ? `"${deleting.judul}" akan dihapus permanen.` : undefined}
         confirmLabel="Ya, hapus"
-        onCancel={() => setDeleting(null)}
-        onConfirm={() => { if (deleting) { deleteDoc(deleting.id); setDeleting(null); refresh(); } }}
+        busy={deletingBusy}
+        onCancel={() => { if (!deletingBusy) setDeleting(null); }}
+        onConfirm={async () => {
+          if (!deleting || deletingBusy) return;
+          setDeletingBusy(true);
+          try {
+            await deleteDoc(deleting.id);
+          } catch (e) {
+            setErr(e instanceof ApiError ? e.message : "Gagal menghapus.");
+          }
+          setDeletingBusy(false);
+          setDeleting(null);
+          refresh();
+        }}
       />
     </div>
   );

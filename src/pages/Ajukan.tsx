@@ -9,9 +9,8 @@ import { Button, Card, Field, Reveal, inputCls } from "../components/ui";
 import SearchSelect from "../components/SearchSelect";
 import { formatRupiah, maskNip, maskWa } from "../lib/masking";
 import { DAFTAR_JABATAN, DAFTAR_SKPK } from "../lib/referensi";
-import { createTicket } from "../lib/store";
+import { ApiError, createTicket, fileToBase64, getAllLayanan, getCachedLayanan } from "../lib/api";
 import { BENTUK_KONSULTASI, METODE, TAHAPAN } from "../types";
-import { getAllLayanan } from "../lib/store";
 
 const DRAFT_KEY = "klinik_pbj_draft_v1";
 
@@ -21,7 +20,7 @@ const schema = z.object({
   jabatan: z.string().refine((jabatan) => DAFTAR_JABATAN.includes(jabatan), { message: "Pilih jabatan dari daftar yang tersedia" }),
   skpk: z.string().refine((skpk) => DAFTAR_SKPK.includes(skpk), { message: "Pilih SKPK dari daftar 45 instansi" }),
   wa: z.string().regex(/^(\+62|08)\d{8,13}$/, "Format WA: 08… / +62…"),
-  jenisLayanan: z.string().refine((layanan) => getAllLayanan().includes(layanan), { message: "Pilih jenis layanan yang tersedia" }),
+  jenisLayanan: z.string().refine((layanan) => getCachedLayanan().includes(layanan), { message: "Pilih jenis layanan yang tersedia" }),
   tahapan: z.string().min(1, "Pilih tahapan"),
   metode: z.string().min(1, "Pilih metode"),
   namaPaket: z.string().min(5, "Nama paket minimal 5 karakter"),
@@ -53,6 +52,10 @@ export default function Ajukan() {
   const [fileErr, setFileErr] = useState("");
   const [preset, setPreset] = useState<string | null>(null);
   const [draftInfo, setDraftInfo] = useState(false);
+  const [layananOpts, setLayananOpts] = useState<string[]>([]);
+  const [fileObj, setFileObj] = useState<File | null>(null);
+  const [sending, setSending] = useState(false);
+  const [submitErr, setSubmitErr] = useState("");
   const saveTimer = useRef<number | undefined>(undefined);
   const { register, handleSubmit, trigger, watch, setValue, getValues, reset, formState: { errors, isValid } } = useForm<FormVal>({
     resolver: zodResolver(schema),
@@ -62,6 +65,17 @@ export default function Ajukan() {
 
   // pulihkan draft (kecuali preset layanan dari URL menang)
   useEffect(() => {
+    let on = true;
+    getAllLayanan().then((list) => {
+      if (!on) return;
+      setLayananOpts(list);
+      const l = params.get("layanan");
+      if (l && list.includes(l)) {
+        setValue("jenisLayanan", l);
+        setPreset(l);
+        setStep(0);
+      }
+    }).catch(() => {});
     try {
       const raw = localStorage.getItem(DRAFT_KEY);
       if (raw) {
@@ -72,12 +86,7 @@ export default function Ajukan() {
         }
       }
     } catch { /* abaikan draft rusak */ }
-    const l = params.get("layanan");
-    if (l && getAllLayanan().includes(l)) {
-      setValue("jenisLayanan", l);
-      setPreset(l);
-      setStep(0);
-    }
+    return () => { on = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -118,6 +127,7 @@ export default function Ajukan() {
     const okType = ["application/pdf", "image/png", "image/jpeg", "image/jpg"].includes(f.type);
     if (!okType) { setFileErr("Hanya PDF / PNG / JPG."); return; }
     if (f.size > 10 * 1024 * 1024) { setFileErr("Maksimal 10MB."); return; }
+    setFileObj(f);
     setValue("fileName", f.name, { shouldValidate: true });
     if (preview) URL.revokeObjectURL(preview.url);
     const mb = f.size > 1024 * 1024 ? `${(f.size / 1024 / 1024).toFixed(2)} MB` : `${Math.max(1, Math.round(f.size / 1024))} KB`;
@@ -131,6 +141,7 @@ export default function Ajukan() {
   const removeFile = () => {
     if (preview) URL.revokeObjectURL(preview.url);
     setPreview(null);
+    setFileObj(null);
     setValue("fileName", "", { shouldValidate: true });
   };
 
@@ -138,17 +149,31 @@ export default function Ajukan() {
     localStorage.removeItem(DRAFT_KEY);
     if (preview) URL.revokeObjectURL(preview.url);
     setPreview(null);
+    setFileObj(null);
     reset({ jenisLayanan: "Pengadaan Barang", bentuk: "Jawaban/penjelasan tertulis", tahapan: "Pemilihan", metode: "E-Purchasing", setuju: false, nama: "", nip: "", jabatan: "", skpk: "", wa: "", namaPaket: "", nilai: "", uraian: "", pertanyaan: "", fileName: "" });
     setStep(0);
     setPreset(null);
     setDraftInfo(false);
   };
 
-  const submit = (v: FormVal) => {
-    const { setuju: _s, ...rest } = v;
-    const t = createTicket({ ...rest, nilai: digitsOnly(v.nilai ?? "") || undefined });
-    localStorage.removeItem(DRAFT_KEY);
-    nav(`/sukses/${t.kode}`, { state: { wa: v.wa } });
+  const submit = async (v: FormVal) => {
+    if (sending) return;
+    setSending(true);
+    setSubmitErr("");
+    try {
+      const { setuju: _s, ...rest } = v;
+      const file = fileObj
+        ? { filename: fileObj.name, mime: fileObj.type, base64: await fileToBase64(fileObj) }
+        : undefined;
+      const kode = await createTicket({ ...rest, nilai: digitsOnly(v.nilai ?? "") || undefined, file });
+      localStorage.removeItem(DRAFT_KEY);
+      nav(`/sukses/${kode}`, { state: { wa: v.wa } });
+    } catch (e) {
+      setSubmitErr(e instanceof ApiError ? e.message : "Gagal mengirim. Periksa koneksi lalu coba lagi.");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } finally {
+      setSending(false);
+    }
   };
 
   const v = getValues();
@@ -229,7 +254,7 @@ export default function Ajukan() {
             {step === 1 && (
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="sm:col-span-2"><Field label="Jenis Layanan *" error={errors.jenisLayanan?.message} hint={preset ? "🔒 Terkunci dari akses cepat yang dipilih" : undefined}>
-                  <select {...register("jenisLayanan")} disabled={!!preset} className={`${inputCls()} ${preset ? "cursor-not-allowed bg-slate-100 text-slate-500" : ""}`}>{getAllLayanan().map((l) => <option key={l} value={l}>{l}</option>)}</select>
+                  <select {...register("jenisLayanan")} disabled={!!preset} className={`${inputCls()} ${preset ? "cursor-not-allowed bg-slate-100 text-slate-500" : ""}`}>{layananOpts.map((l) => <option key={l} value={l}>{l}</option>)}</select>
                 </Field></div>
                 <Field label="Tahapan Pengadaan *" error={errors.tahapan?.message}>
                   <select {...register("tahapan")} className={inputCls()}>{TAHAPAN.map((t) => <option key={t} value={t}>{t}</option>)}</select>
@@ -326,13 +351,14 @@ export default function Ajukan() {
         </AnimatePresence>
 
         <div className="mt-7 flex items-center justify-between gap-3">
-          <button onClick={() => setStep((s) => Math.max(0, s - 1))} disabled={step === 0} className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-bold text-slate-500 hover:bg-slate-100 disabled:opacity-30"><ArrowLeft size={16} /> Kembali</button>
+          <button onClick={() => setStep((s) => Math.max(0, s - 1))} disabled={step === 0 || sending} className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-bold text-slate-500 hover:bg-slate-100 disabled:opacity-30"><ArrowLeft size={16} /> Kembali</button>
           {step < 3 ? (
             <Button onClick={next}>Lanjut <ArrowRight size={16} /></Button>
           ) : (
-            <Button onClick={handleSubmit(submit)}><Send size={15} /> Kirim Konsultasi</Button>
+            <Button onClick={handleSubmit(submit)} disabled={sending}><Send size={15} /> {sending ? "Mengirim…" : "Kirim Konsultasi"}</Button>
           )}
         </div>
+        {submitErr && <p className="mt-3 rounded-xl bg-rose-50 px-4 py-2.5 text-xs font-semibold text-rose-700 ring-1 ring-rose-200">{submitErr}</p>}
         {!isValid && step === 3 && <p className="mt-2 text-right text-[11px] text-slate-400">Centang persetujuan untuk mengaktifkan pengiriman</p>}
       </Card>
     </main>

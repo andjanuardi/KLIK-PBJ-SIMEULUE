@@ -1,9 +1,13 @@
 import { motion } from "framer-motion";
 import { BrushCleaning, FileText, HardHat, Package, ScrollText, Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logoDefault from "../assets/logo.png";
 import { useCountUp } from "../hooks/useCountUp";
-import { DEFAULT_SETTINGS, getAllLayanan, loadSettings } from "../lib/store";
+import { getAllLayanan, getSettings } from "../lib/api";
+import { DEFAULT_SETTINGS } from "../lib/store";
+import type { SiteSettings } from "../lib/store";
+import { LAYANAN } from "../types";
 import type { Ticket } from "../types";
 
 const QUICK_BASE: { label: string; icon: typeof Package; chip: string; glow: string }[] = [
@@ -24,9 +28,15 @@ const CAT_BAR: Record<string, string> = {
 
 export default function Hero({ tickets = [], loading }: { tickets?: Ticket[]; loading?: boolean }) {
   const nav = useNavigate();
-  const settings = loadSettings();
+  const [settings, setSettings] = useState<SiteSettings>(DEFAULT_SETTINGS);
+  const [allLayanan, setAllLayanan] = useState<string[]>([...LAYANAN]);
+  useEffect(() => {
+    let on = true;
+    getSettings().then((s) => { if (on) setSettings(s); }).catch(() => {});
+    getAllLayanan().then((l) => { if (on) setAllLayanan(l); }).catch(() => {});
+    return () => { on = false; };
+  }, []);
   const logo = settings.logoDataUrl || logoDefault;
-  const allLayanan = getAllLayanan();
   const QUICK = allLayanan.map((l) => {
     const base = QUICK_BASE.find((q) => q.label === l);
     if (base) return base;

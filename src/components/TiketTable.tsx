@@ -3,8 +3,8 @@ import { ArrowDownWideNarrow, ChevronLeft, ChevronRight, Eye, Search } from "luc
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import type { Ticket } from "../types";
-import { formatJam, formatTanggal, maskNama } from "../lib/masking";
-import { getAllLayanan } from "../lib/store";
+import { formatJam, formatTanggal } from "../lib/masking";
+import { getAllLayanan } from "../lib/api";
 import { Empty, LayananBadge, Reveal, Skeleton, StatusBadge } from "./ui";
 
 const STATUS_OPTS = ["Semua", "Selesai", "Dalam Proses", "Perlu Klarifikasi"];
@@ -50,7 +50,13 @@ export default function TiketTable({ tickets, loading }: { tickets: Ticket[]; lo
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [filtering, setFiltering] = useState(false);
-  const LAYANAN_OPTS = useMemo(() => ["Semua", ...getAllLayanan()], []);
+  const [layananOpts, setLayananOpts] = useState<string[]>(["Semua"]);
+  useEffect(() => {
+    let on = true;
+    getAllLayanan().then((l) => { if (on) setLayananOpts(["Semua", ...l]); }).catch(() => {});
+    return () => { on = false; };
+  }, []);
+  const LAYANAN_OPTS = layananOpts;
 
   const filtered = useMemo(() => {
     const out = tickets.filter((t) => {
@@ -155,7 +161,7 @@ export default function TiketTable({ tickets, loading }: { tickets: Ticket[]; lo
                         <p className="mt-0.5 text-[11px] text-slate-400 tabular-nums">{formatJam(t.createdAt)}</p>
                       </td>
                       <td className="px-4 py-3 font-mono text-xs font-bold text-slate-800">{t.kode}</td>
-                      <td className="px-4 py-3"><p className="text-[13px] font-bold text-slate-800">{t.skpk}</p><p className="text-[11px] text-slate-400">{maskNama(t.nama)}</p></td>
+                      <td className="px-4 py-3"><p className="text-[13px] font-bold text-slate-800">{t.skpk}</p><p className="text-[11px] text-slate-400">{t.nama}</p></td>
                       <td className="px-4 py-3"><LayananBadge label={t.jenisLayanan} /></td>
                       <td className="max-w-[240px] px-4 py-3"><p className="clamp-2 text-[13px] font-medium text-slate-700">{t.namaPaket}</p></td>
                       <td className="px-4 py-3"><StatusBadge status={t.status} /></td>

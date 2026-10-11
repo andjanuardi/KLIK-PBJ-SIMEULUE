@@ -127,11 +127,12 @@ export function Empty({ title, desc }: { title: string; desc?: string }) {
   );
 }
 
-export function ConfirmDialog({ open, title, message, confirmLabel = "Hapus", onConfirm, onCancel }: {
+export function ConfirmDialog({ open, title, message, confirmLabel = "Hapus", busy, onConfirm, onCancel }: {
   open: boolean;
   title: string;
   message?: string;
   confirmLabel?: string;
+  busy?: boolean;
   onConfirm: () => void;
   onCancel: () => void;
 }) {
@@ -168,13 +169,14 @@ export function ConfirmDialog({ open, title, message, confirmLabel = "Hapus", on
             <p className="mt-3 text-base font-extrabold text-slate-900">{title}</p>
             {message && <p className="mt-1 text-sm leading-relaxed text-slate-500">{message}</p>}
             <div className="mt-5 flex gap-2">
-              <Button variant="ghost" onClick={onCancel} className="flex-1">Batal</Button>
+              <Button variant="ghost" onClick={onCancel} disabled={busy} className="flex-1">Batal</Button>
               <button
                 onClick={onConfirm}
                 autoFocus
-                className="flex-1 cursor-pointer rounded-xl bg-rose-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-rose-600/25 transition-colors hover:bg-rose-700"
+                disabled={busy}
+                className="flex-1 cursor-pointer rounded-xl bg-rose-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-rose-600/25 transition-colors hover:bg-rose-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {confirmLabel}
+                {busy ? "Menghapus…" : confirmLabel}
               </button>
             </div>
           </motion.div>

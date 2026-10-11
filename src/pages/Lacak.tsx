@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import TicketThread from "../components/TicketThread";
 import { Button, Card, Field, LayananBadge, Reveal, StatusBadge, inputCls } from "../components/ui";
-import { formatJam, formatTanggal, last4 } from "../lib/masking";
-import { getTicket } from "../lib/store";
+import { formatJam, formatTanggal } from "../lib/masking";
+import { ApiError, driveFileUrl, verifyTicket } from "../lib/api";
 import type { StatusTiket, Ticket } from "../types";
 
 function Timeline({ status }: { status: StatusTiket }) {
@@ -50,19 +50,23 @@ export default function Lacak() {
   const [verif, setVerif] = useState("");
   const [err, setErr] = useState("");
   const [ticket, setTicket] = useState<Ticket | null>(null);
+  const [busy, setBusy] = useState(false);
 
-  const cari = (kodeVal?: string, verifVal?: string) => {
+  const cari = async (kodeVal?: string, verifVal?: string) => {
     const k = (kodeVal ?? kode).trim().toUpperCase();
     const vg = (verifVal ?? verif).trim();
     setErr("");
     if (!k) { setErr("Masukkan kode tiket terlebih dahulu."); return; }
-    const t = getTicket(k);
-    if (!t) { setErr("Kode tiket tidak ditemukan. Periksa kembali."); setTicket(null); return; }
     if (vg.length !== 4) { setErr("Wajib masukkan 4 digit terakhir No. WA / NIK untuk membuka tiket."); setTicket(null); return; }
-    const okWa = last4(t.wa) === vg;
-    const okNip = last4(t.nip) === vg;
-    if (!okWa && !okNip) { setErr("4 digit verifikasi tidak cocok dengan WA / NIK tiket ini."); setTicket(null); return; }
-    setTicket(t);
+    setBusy(true);
+    try {
+      setTicket(await verifyTicket(k, vg));
+    } catch (e) {
+      setErr(e instanceof ApiError ? e.message : "Gagal melacak. Periksa koneksi lalu coba lagi.");
+      setTicket(null);
+    } finally {
+      setBusy(false);
+    }
   };
 
   useEffect(() => {
@@ -85,7 +89,7 @@ export default function Lacak() {
         <div className="grid gap-3 sm:grid-cols-[1fr_160px_auto]">
           <Field label="Kode Tiket *"><input value={kode} onChange={(e) => setKode(e.target.value.toUpperCase())} onKeyDown={onEnter} placeholder="cth: PB-00001" className={`${inputCls()} text-center font-mono font-bold tracking-widest`} /></Field>
           <Field label="4 Digit WA/NIK *"><input value={verif} onChange={(e) => setVerif(e.target.value.replace(/\D/g, "").slice(0, 4))} onKeyDown={onEnter} inputMode="numeric" placeholder="7890" className={`${inputCls()} text-center font-mono font-bold tracking-widest`} /></Field>
-          <div className="flex items-end"><Button onClick={() => cari()}><Search size={15} /> Lacak</Button></div>
+          <div className="flex items-end"><Button onClick={() => cari()} disabled={busy}><Search size={15} /> {busy ? "Mencari…" : "Lacak"}</Button></div>
         </div>
         <AnimatePresence>
           {err && <motion.p initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mt-3 rounded-xl bg-rose-50 px-4 py-2.5 text-xs font-semibold text-rose-700 ring-1 ring-rose-200">{err}</motion.p>}
@@ -113,8 +117,13 @@ export default function Lacak() {
                   <p className="mt-1 text-slate-700">{ticket.uraian}</p>
                   <p className="mt-2 text-xs font-bold text-slate-500">Pertanyaan</p>
                   <p className="text-slate-700">{ticket.pertanyaan}</p>
+                  {driveFileUrl(ticket.fileDriveId) && (
+                    <a href={driveFileUrl(ticket.fileDriveId)} target="_blank" rel="noreferrer" className="mt-3 flex items-center gap-2 rounded-xl bg-blue-50 px-3 py-2 text-xs font-bold text-blue-700 ring-1 ring-blue-200 hover:bg-blue-100">
+                      📎 {ticket.fileName || "Lampiran"} <span className="ml-auto font-semibold">Lihat →</span>
+                    </a>
+                  )}
                 </div>
-                <TicketThread ticket={ticket} onUpdate={setTicket} />
+                <TicketThread ticket={ticket} digits={verif} onUpdate={setTicket} />
               </div>
             </Card>
           </motion.div>

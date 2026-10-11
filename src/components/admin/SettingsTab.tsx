@@ -1,26 +1,48 @@
 import { motion } from "framer-motion";
 import { ImagePlus, Plus, Save, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Card, Field, inputCls } from "../ui";
-import { loadSettings, saveSettings } from "../../lib/store";
+import { ApiError, getSettings, saveSettings, uploadFile } from "../../lib/api";
+import { DEFAULT_SETTINGS } from "../../lib/store";
+import type { SiteSettings } from "../../lib/store";
 import { LAYANAN } from "../../types";
 
 export default function SettingsTab() {
-  const [s, setS] = useState(() => loadSettings());
+  const [s, setS] = useState<SiteSettings>(DEFAULT_SETTINGS);
+  const [loading, setLoading] = useState(true);
   const [baru, setBaru] = useState("");
   const [err, setErr] = useState("");
   const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
+
+  useEffect(() => {
+    let on = true;
+    getSettings()
+      .then((v) => { if (on) { setS(v); setLoading(false); } })
+      .catch((e) => { if (on) { setErr(e instanceof ApiError ? e.message : "Gagal memuat pengaturan."); setLoading(false); } });
+    return () => { on = false; };
+  }, []);
 
   const set = (p: Partial<typeof s>) => { setS((v) => ({ ...v, ...p })); setSaved(false); };
 
-  const onLogo = (f: File | undefined) => {
+  // Logo disimpan di Drive (URL thumbnail pendek), bukan base64 — sel Sheets maks ~50rb karakter.
+  const onLogo = async (f: File | undefined) => {
     setErr("");
-    if (!f) return;
+    if (!f || uploadingLogo) return;
     if (!["image/png", "image/jpeg", "image/jpg"].includes(f.type)) { setErr("Logo hanya PNG / JPG."); return; }
     if (f.size > 1024 * 1024) { setErr("Logo maksimal 1MB."); return; }
-    const r = new FileReader();
-    r.onload = () => set({ logoDataUrl: String(r.result) });
-    r.readAsDataURL(f);
+    setUploadingLogo(true);
+    try {
+      const m = /\.([A-Za-z0-9]{1,5})$/.exec(f.name.trim());
+      const ext = (m ? m[1] : "png").toLowerCase();
+      const up = await uploadFile(f, `logo-klik-pbj.${ext}`);
+      set({ logoDataUrl: `https://drive.google.com/thumbnail?id=${up.fileId}&sz=w500` });
+    } catch (e) {
+      setErr(e instanceof ApiError ? e.message : "Gagal mengunggah logo.");
+    } finally {
+      setUploadingLogo(false);
+    }
   };
 
   const tambahLayanan = () => {
@@ -31,15 +53,22 @@ export default function SettingsTab() {
     setBaru(""); setErr("");
   };
 
-  const simpan = () => {
+  const simpan = async () => {
+    if (saving) return;
+    setErr("");
+    setSaving(true);
     try {
-      saveSettings(s);
+      await saveSettings(s);
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
-    } catch {
-      setErr("Gagal menyimpan — penyimpanan browser penuh. Hapus dokumen besar dulu.");
+    } catch (e) {
+      setErr(e instanceof ApiError ? e.message : "Gagal menyimpan. Periksa koneksi.");
+    } finally {
+      setSaving(false);
     }
   };
+
+  if (loading) return <p className="p-2 text-xs text-slate-400">Memuat pengaturan…</p>;
 
   return (
     <div className="grid gap-4 lg:grid-cols-2">
@@ -57,7 +86,7 @@ export default function SettingsTab() {
               <input type="file" accept=".png,.jpg,.jpeg" onChange={(e) => onLogo(e.target.files?.[0])} className="hidden" />
             </label>
             {s.logoDataUrl && <button onClick={() => set({ logoDataUrl: undefined })} className="ml-2 cursor-pointer text-xs font-bold text-rose-600 hover:underline">Kembalikan default</button>}
-            <p className="mt-1 text-[11px] text-slate-400">PNG/JPG ≤ 1MB • tampil di Navbar & Hero</p>
+            <p className="mt-1 text-[11px] text-slate-400">PNG/JPG ≤ 1MB • tersimpan di Drive • tampil di Navbar & Hero{uploadingLogo ? " • mengunggah…" : ""}</p>
           </div>
         </div>
         <Field label="Judul Hero"><input value={s.heroTitle ?? ""} onChange={(e) => set({ heroTitle: e.target.value })} className={inputCls()} /></Field>
@@ -93,13 +122,13 @@ export default function SettingsTab() {
           </div>
         </Card>
         <Card className="space-y-3 p-5">
-          <h3 className="text-sm font-extrabold text-slate-900">Jam Layanan (Footer)</h3>
+          <h3 className="text-sm font-bold text-slate-900">Jam Layanan (Footer)</h3>
           <Field label="Teks jam layanan"><input value={s.jamLayanan ?? ""} onChange={(e) => set({ jamLayanan: e.target.value })} className={inputCls()} /></Field>
           {err && <p className="rounded-xl bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-700 ring-1 ring-rose-200">{err}</p>}
         </Card>
       </div>
-      <div className="mt-4">
-        <Button onClick={simpan} className="w-full !py-3.5 text-sm shadow-xl"><Save size={15} /> {saved ? "Tersimpan! ✓" : "Simpan Semua Pengaturan"}</Button>
+      <div className="mt-4 lg:col-span-2">
+        <Button onClick={simpan} disabled={saving} className="w-full !py-3.5 text-sm shadow-xl"><Save size={15} /> {saving ? "Menyimpan…" : saved ? "Tersimpan! ✓" : "Simpan Semua Pengaturan"}</Button>
       </div>
     </div>
   );

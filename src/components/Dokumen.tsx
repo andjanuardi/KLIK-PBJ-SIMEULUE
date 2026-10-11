@@ -1,11 +1,11 @@
 import { ChevronLeft, ChevronRight, Download, FileText, Scale, Search } from "lucide-react";
-import { useMemo, useState } from "react";
-import { loadDocs } from "../lib/store";
+import { useEffect, useMemo, useState } from "react";
+import { getDocs } from "../lib/api";
 import type { DocItem } from "../lib/store";
 import { Empty, Skeleton } from "./ui";
 
 const ICONS = [Scale, FileText, FileText, Download, Download, Scale];
-const PAGE_SIZE = 6;
+const PAGE_SIZE = 9;
 
 function SkeletonCards() {
   return (
@@ -26,7 +26,16 @@ function SkeletonCards() {
 }
 
 export default function Dokumen({ loading }: { loading?: boolean }) {
-  const docs: DocItem[] = useMemo(() => (loading ? [] : loadDocs()), [loading]);
+  const [docs, setDocs] = useState<DocItem[]>([]);
+  const [loadingDocs, setLoadingDocs] = useState(true);
+  useEffect(() => {
+    let on = true;
+    getDocs()
+      .then((list) => { if (on) { setDocs(list); setLoadingDocs(false); } })
+      .catch(() => { if (on) setLoadingDocs(false); });
+    return () => { on = false; };
+  }, []);
+  const busy = loading || loadingDocs;
   const [cat, setCat] = useState("Semua");
   const [q, setQ] = useState("");
   const [page, setPage] = useState(0);
@@ -58,7 +67,7 @@ export default function Dokumen({ loading }: { loading?: boolean }) {
     <div>
       <div>
         <h2 className="text-lg font-extrabold tracking-tight text-slate-900">Informasi & Dokumen Referensi PBJ</h2>
-        <p className="text-xs text-slate-500">Unduh dasar hukum dan template yang sering dipakai dalam konsultasi • {loading ? "…" : `${filtered.length} dokumen`}</p>
+        <p className="text-xs text-slate-500">Unduh dasar hukum dan template yang sering dipakai dalam konsultasi • {busy ? "…" : `${filtered.length} dokumen`}</p>
       </div>
       <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-wrap gap-2">
@@ -76,14 +85,15 @@ export default function Dokumen({ loading }: { loading?: boolean }) {
           />
         </label>
       </div>
-      {loading ? (
+      {busy ? (
         <SkeletonCards />
       ) : (
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map((d, i) => {
             const Icon = ICONS[(safePage * PAGE_SIZE + i) % ICONS.length];
-            const href = d.tipe === "url" && d.url ? d.url : d.dataUrl;
-            const external = d.tipe === "url" && !!d.url;
+            // url Drive (tipe url maupun file) → link; dataUrl base64 lama → unduh langsung
+            const href = d.url || (d.tipe === "url" ? undefined : d.dataUrl);
+            const openTab = !!d.url;
             const inner = (
               <>
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-slate-900 text-white group-hover:bg-emerald-600">
@@ -93,7 +103,7 @@ export default function Dokumen({ loading }: { loading?: boolean }) {
                   <span className="mb-1 inline-block rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700 ring-1 ring-emerald-200">{d.tag}</span>
                   <span className="block text-sm font-bold text-slate-800">{d.judul}</span>
                   <span className="mt-0.5 block text-xs text-slate-500">{d.desc}{d.fileName ? ` • ${d.fileName}` : ""}</span>
-                  <span className="mt-2 inline-flex items-center gap-1 text-xs font-bold text-emerald-700">{href ? (external ? "Buka tautan" : "Unduh") : "Info"} <Download size={12} /></span>
+                  <span className="mt-2 inline-flex items-center gap-1 text-xs font-bold text-emerald-700">{href ? (d.tipe === "url" ? "Buka tautan" : "Unduh") : "Info"} <Download size={12} /></span>
                 </span>
               </>
             );
@@ -102,7 +112,7 @@ export default function Dokumen({ loading }: { loading?: boolean }) {
               <a
                 key={d.id}
                 href={href}
-                {...(external ? { target: "_blank", rel: "noreferrer" } : { download: d.fileName ?? d.judul })}
+                {...(openTab ? { target: "_blank", rel: "noreferrer" } : { download: d.fileName ?? d.judul })}
                 className={cls}
               >
                 {inner}
@@ -115,8 +125,8 @@ export default function Dokumen({ loading }: { loading?: boolean }) {
           })}
         </div>
       )}
-      {!loading && filtered.length === 0 && <div className="mt-4"><Empty title="Tidak ada dokumen" desc="Coba kata kunci atau kategori lain." /></div>}
-      {!loading && filtered.length > 0 && (
+      {!busy && filtered.length === 0 && <div className="mt-4"><Empty title="Tidak ada dokumen" desc="Coba kata kunci atau kategori lain." /></div>}
+      {!busy && filtered.length > 0 && (
         <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
           <p className="text-xs text-slate-500">Menampilkan {from}–{to} dari {filtered.length} dokumen • Halaman {safePage + 1} dari {totalPages}</p>
           <div className="flex items-center gap-2">

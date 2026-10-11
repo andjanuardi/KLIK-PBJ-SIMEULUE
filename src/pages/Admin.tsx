@@ -2,30 +2,46 @@ import { AnimatePresence, motion } from "framer-motion";
 import { FileText, Inbox, LogOut, Reply as ReplyIcon, Search, Settings2, Trash2, Users } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Card, Empty, LayananBadge, Reveal, Skeleton, StatusBadge } from "../components/ui";
+import { Button, Card, ConfirmDialog, Empty, LayananBadge, Reveal, Skeleton, StatusBadge } from "../components/ui";
 import { formatJam, formatTanggal } from "../lib/masking";
-import { clearAdminSession, deleteTicket, getAdminSession, getAllLayanan, loadTickets, petugasReply } from "../lib/store";
+import { ApiError, deleteTicket, driveFileUrl, getAllLayanan, getTicketsAdmin, petugasReply } from "../lib/api";
+import { clearAdminSession, getAdminSession } from "../lib/store";
 import type { StatusTiket, Ticket } from "../types";
 import DocsTab from "../components/admin/DocsTab";
 import SettingsTab from "../components/admin/SettingsTab";
 import UsersTab from "../components/admin/UsersTab";
 
 function KonsultasiTab({ scope }: { scope?: string }) {
+  const nav = useNavigate();
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadErr, setLoadErr] = useState("");
   const [active, setActive] = useState<string | null>(null);
   const [balas, setBalas] = useState("");
   const [status, setStatus] = useState<StatusTiket>("Selesai");
   const [filter, setFilter] = useState("Dalam Proses");
   const [q, setQ] = useState("");
   const [filtering, setFiltering] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sendErr, setSendErr] = useState("");
+  const [deleting, setDeleting] = useState<Ticket | null>(null);
+  const [deletingBusy, setDeletingBusy] = useState(false);
+
+  const refresh = async () => {
+    try {
+      setTickets(await getTicketsAdmin());
+    } catch (e) {
+      if (e instanceof ApiError && e.code === 401) { clearAdminSession(); nav("/admin/login"); return; }
+      setLoadErr(e instanceof ApiError ? e.message : "Gagal memuat tiket.");
+    }
+  };
 
   useEffect(() => {
-    const t = setTimeout(() => {
-      setTickets(loadTickets().sort((a, b) => +new Date(b.updatedAt ?? b.createdAt) - +new Date(a.updatedAt ?? a.createdAt)));
-      setLoading(false);
-    }, 500);
-    return () => clearTimeout(t);
+    let on = true;
+    setLoading(true);
+    refresh().finally(() => { if (on) setLoading(false); });
+    return () => { on = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -36,7 +52,13 @@ function KonsultasiTab({ scope }: { scope?: string }) {
   }, [q, filter, loading]);
 
   // scope tim: hanya tiket layanannya; admin / tim legacy (tanpa layanan) = semua
-  const scopeGone = !!scope && !getAllLayanan().includes(scope);
+  const [layananOpts, setLayananOpts] = useState<string[] | null>(null);
+  useEffect(() => {
+    let on = true;
+    getAllLayanan().then((l) => { if (on) setLayananOpts(l); }).catch(() => { if (on) setLayananOpts([]); });
+    return () => { on = false; };
+  }, []);
+  const scopeGone = !!scope && layananOpts !== null && !layananOpts.includes(scope);
   const visible = useMemo(
     () => (scope && !scopeGone ? tickets.filter((t) => t.jenisLayanan === scope) : scopeGone ? [] : tickets),
     [tickets, scope, scopeGone]
@@ -70,20 +92,29 @@ function KonsultasiTab({ scope }: { scope?: string }) {
   }, [visible, filter, q]);
   const t = rows.find((r) => r.kode === active) ?? visible.find((r) => r.kode === active) ?? null;
 
-  const refresh = () => setTickets(loadTickets().sort((a, b) => +new Date(b.updatedAt ?? b.createdAt) - +new Date(a.updatedAt ?? a.createdAt)));
   const busy = loading || filtering;
 
-  const kirimBalasan = () => {
-    if (!t || balas.trim().length < 5) return;
-    petugasReply(t.kode, balas.trim(), { status, ringkasan: balas.trim().slice(0, 260) });
-    setBalas("");
-    refresh();
+  const kirimBalasan = async () => {
+    if (!t || balas.trim().length < 5 || sending) return;
+    setSending(true);
+    setSendErr("");
+    try {
+      await petugasReply(t.kode, balas.trim(), { status, ringkasan: balas.trim().slice(0, 260) });
+      setBalas("");
+      await refresh();
+    } catch (e) {
+      if (e instanceof ApiError && e.code === 401) { clearAdminSession(); nav("/admin/login"); return; }
+      setSendErr(e instanceof ApiError ? e.message : "Gagal mengirim balasan.");
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
     <div>
       <p className="text-sm text-slate-500">{visible.length} tiket{scope && !scopeGone ? ` • khusus layanan ${scope}` : ""} • balas, ubah status & publish ringkasan ke tabel publik.</p>
       {scopeGone && <p className="mt-2 rounded-xl bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-800 ring-1 ring-amber-200">Layanan "{scope}" sudah tidak tersedia. Hubungi admin untuk menetapkan layanan baru.</p>}
+      {loadErr && <p className="mt-2 rounded-xl bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-700 ring-1 ring-rose-200">{loadErr} <button onClick={() => { setLoadErr(""); setLoading(true); refresh().finally(() => setLoading(false)); }} className="cursor-pointer font-bold underline">Coba lagi</button></p>}
       <div className="mt-4 flex flex-wrap items-center gap-2">
         {FILTERS.map((s) => (
           <button key={s} onClick={() => setFilter(s)} className={`cursor-pointer rounded-full px-4 py-1.5 text-xs font-bold ring-1 transition ${filter === s ? (s === "Perlu Tindak Lanjut" ? "bg-amber-500 text-white ring-amber-500" : "bg-slate-900 text-white ring-slate-900") : "bg-white text-slate-600 ring-slate-200"}`}>
@@ -144,6 +175,11 @@ function KonsultasiTab({ scope }: { scope?: string }) {
                   <p className="text-xs text-slate-500">{t.nama} • {t.jabatan} • {t.skpk}<br />WA {t.wa} • NIP {t.nip}</p>
                 </div>
                 <div className="rounded-xl bg-slate-50 p-3 text-xs leading-relaxed text-slate-600 ring-1 ring-slate-200">{t.uraian}</div>
+                {driveFileUrl(t.fileDriveId) && (
+                  <a href={driveFileUrl(t.fileDriveId)} target="_blank" rel="noreferrer" className="flex items-center gap-2 rounded-xl bg-blue-50 px-3 py-2.5 text-xs font-bold text-blue-700 ring-1 ring-blue-200 hover:bg-blue-100">
+                    📎 {t.fileName || "Lampiran pemohon"} <span className="ml-auto font-semibold">Unduh →</span>
+                  </a>
+                )}
                 {t.menungguPetugas && (
                   <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} className="rounded-xl bg-amber-50 p-3 text-xs leading-relaxed text-amber-900 ring-1 ring-amber-300">
                     <p className="font-extrabold">↩ Klarifikasi / pesan baru dari pemohon — perlu respons Anda</p>
@@ -163,9 +199,10 @@ function KonsultasiTab({ scope }: { scope?: string }) {
                   <select value={status} onChange={(e) => setStatus(e.target.value as StatusTiket)} className="flex-1 cursor-pointer rounded-xl border border-slate-200 px-3 py-2.5 text-sm font-semibold">
                     <option>Dalam Proses</option><option>Selesai</option><option>Perlu Klarifikasi</option>
                   </select>
-                  <Button size="sm" onClick={kirimBalasan}><ReplyIcon size={14} /> Balas</Button>
+                  <Button size="sm" onClick={kirimBalasan} disabled={sending}><ReplyIcon size={14} /> {sending ? "Mengirim…" : "Balas"}</Button>
                 </div>
-                <button onClick={() => { if (t && confirm(`Hapus ${t.kode}?`)) { deleteTicket(t.kode); setActive(null); refresh(); } }} className="inline-flex cursor-pointer items-center gap-1 text-xs font-bold text-rose-600 hover:underline"><Trash2 size={13} /> Hapus tiket</button>
+                {sendErr && <p className="rounded-xl bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-700 ring-1 ring-rose-200">{sendErr}</p>}
+                <button onClick={() => t && setDeleting(t)} className="inline-flex cursor-pointer items-center gap-1 text-xs font-bold text-rose-600 hover:underline"><Trash2 size={13} /> Hapus tiket</button>
                 <p className="rounded-xl bg-emerald-50 px-3 py-2 text-[11px] text-emerald-700 ring-1 ring-emerald-200">Ringkasan otomatis ter-publish ke tabel publik saat status Selesai.</p>
               </Card>
             </motion.div>
@@ -174,6 +211,28 @@ function KonsultasiTab({ scope }: { scope?: string }) {
           )}
         </AnimatePresence>
       </div>
+      <ConfirmDialog
+        open={!!deleting}
+        title="Hapus tiket?"
+        message={deleting ? `${deleting.kode} • ${deleting.namaPaket} akan dihapus permanen beserta seluruh balasannya.` : undefined}
+        confirmLabel="Ya, hapus"
+        busy={deletingBusy}
+        onCancel={() => { if (!deletingBusy) setDeleting(null); }}
+        onConfirm={async () => {
+          if (!deleting || deletingBusy) return;
+          setDeletingBusy(true);
+          try {
+            await deleteTicket(deleting.kode);
+          } catch (e) {
+            if (e instanceof ApiError && e.code === 401) { clearAdminSession(); nav("/admin/login"); return; }
+            setSendErr(e instanceof ApiError ? e.message : "Gagal menghapus tiket.");
+          }
+          setDeletingBusy(false);
+          setDeleting(null);
+          setActive(null);
+          await refresh();
+        }}
+      />
     </div>
   );
 }

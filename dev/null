@@ -1,0 +1,65 @@
+import { AnimatePresence, motion } from "framer-motion";
+import { LogOut, Reply as ReplyIcon, Trash2 } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button, Card, Empty, LayananBadge, Reveal, StatusBadge } from "../components/ui";
+import { formatTanggal } from "../lib/masking";
+import { clearAdminSession, deleteTicket, getAdminSession, loadTickets, petugasReply } from "../lib/store";
+import DocsTab from "../components/admin/DocsTab";
+import SettingsTab from "../components/admin/SettingsTab";
+import UsersTab from "../components/admin/UsersTab";
+function KonsultasiTab() {
+  const [tickets, setTickets] = useState([]);
+  const [active, setActive] = useState(null);
+  const [balas, setBalas] = useState("");
+  const [status, setStatus] = useState("Selesai");
+  const [filter, setFilter] = useState("Semua");
+  useEffect(() => {
+    setTickets(loadTickets().sort((a, b) => +new Date(a.createdAt) - +new Date(b.createdAt)));
+  }, []);
+  const rows = useMemo(() => filter === "Semua" ? tickets : tickets.filter((t2) => t2.status === filter), [tickets, filter]);
+  const t = rows.find((r) => r.kode === active) ?? tickets.find((r) => r.kode === active) ?? null;
+  const refresh = () => setTickets(loadTickets().sort((a, b) => +new Date(a.createdAt) - +new Date(b.createdAt)));
+  const kirimBalasan = () => {
+    if (!t || balas.trim().length < 5) return;
+    petugasReply(t.kode, balas.trim(), { status, ringkasan: balas.trim().slice(0, 260) });
+    setBalas("");
+    refresh();
+  };
+  return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("p", { className: "text-sm text-slate-500" }, tickets.length, " tiket \u2022 balas, ubah status & publish ringkasan ke tabel publik."), /* @__PURE__ */ React.createElement("div", { className: "mt-4 flex gap-2" }, ["Semua", "Dalam Proses", "Perlu Klarifikasi", "Selesai"].map((s) => /* @__PURE__ */ React.createElement("button", { key: s, onClick: () => setFilter(s), className: `cursor-pointer rounded-full px-4 py-1.5 text-xs font-bold ring-1 ${filter === s ? "bg-slate-900 text-white ring-slate-900" : "bg-white text-slate-600 ring-slate-200"}` }, s))), /* @__PURE__ */ React.createElement("div", { className: "mt-4 grid gap-4 lg:grid-cols-[1fr_380px]" }, /* @__PURE__ */ React.createElement(Card, { className: "overflow-hidden" }, /* @__PURE__ */ React.createElement("div", { className: "max-h-[70vh] divide-y divide-slate-100 overflow-y-auto" }, rows.length === 0 && /* @__PURE__ */ React.createElement("div", { className: "p-4" }, /* @__PURE__ */ React.createElement(Empty, { title: "Antrean kosong" })), /* @__PURE__ */ React.createElement(AnimatePresence, { initial: false }, rows.map((r, idx) => /* @__PURE__ */ React.createElement(
+    motion.button,
+    {
+      key: r.id,
+      layout: true,
+      initial: { opacity: 0, x: -14 },
+      animate: { opacity: 1, x: 0 },
+      exit: { opacity: 0 },
+      transition: { delay: Math.min(idx * 0.03, 0.3) },
+      onClick: () => setActive(r.kode),
+      className: `block w-full cursor-pointer px-5 py-4 text-left transition ${active === r.kode ? "bg-emerald-50/70" : "hover:bg-slate-50"}`
+    },
+    /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2" }, /* @__PURE__ */ React.createElement("span", { className: "font-mono text-xs font-extrabold text-slate-800" }, r.kode), /* @__PURE__ */ React.createElement(LayananBadge, { label: r.jenisLayanan }), /* @__PURE__ */ React.createElement(StatusBadge, { status: r.status }), /* @__PURE__ */ React.createElement("span", { className: "ml-auto text-[11px] text-slate-400" }, formatTanggal(r.createdAt))),
+    /* @__PURE__ */ React.createElement("p", { className: "mt-1.5 truncate text-sm font-bold text-slate-800" }, r.namaPaket),
+    /* @__PURE__ */ React.createElement("p", { className: "truncate text-xs text-slate-500" }, r.skpk, " \u2022 ", r.uraian.slice(0, 80), "\u2026")
+  ))))), /* @__PURE__ */ React.createElement(AnimatePresence, { mode: "wait" }, t ? /* @__PURE__ */ React.createElement(motion.div, { key: t.kode, initial: { opacity: 0, x: 24 }, animate: { opacity: 1, x: 0 }, exit: { opacity: 0, x: 24 }, transition: { duration: 0.3 } }, /* @__PURE__ */ React.createElement(Card, { className: "space-y-4 p-5" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("p", { className: "font-mono text-sm font-extrabold" }, t.kode), /* @__PURE__ */ React.createElement("p", { className: "text-sm font-bold" }, t.namaPaket), /* @__PURE__ */ React.createElement("p", { className: "text-xs text-slate-500" }, t.nama, " \u2022 ", t.jabatan, " \u2022 ", t.skpk, /* @__PURE__ */ React.createElement("br", null), "WA ", t.wa, " \u2022 NIP ", t.nip)), /* @__PURE__ */ React.createElement("div", { className: "rounded-xl bg-slate-50 p-3 text-xs leading-relaxed text-slate-600 ring-1 ring-slate-200" }, t.uraian), /* @__PURE__ */ React.createElement("div", { className: "space-y-1.5" }, t.jawaban.map((r) => /* @__PURE__ */ React.createElement("div", { key: r.id, className: `rounded-xl px-3 py-2 text-xs ${r.dari === "petugas" ? "bg-emerald-600 text-white" : "bg-white ring-1 ring-slate-200"}` }, r.teks))), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("p", { className: "mb-1.5 text-xs font-bold text-slate-600" }, "\u270D\uFE0F Balasan resmi"), /* @__PURE__ */ React.createElement("textarea", { value: balas, onChange: (e) => setBalas(e.target.value), rows: 4, placeholder: "Tulis jawaban mengacu pasal\u2026", className: "w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100" })), /* @__PURE__ */ React.createElement("div", { className: "flex gap-2" }, /* @__PURE__ */ React.createElement("select", { value: status, onChange: (e) => setStatus(e.target.value), className: "flex-1 cursor-pointer rounded-xl border border-slate-200 px-3 py-2.5 text-sm font-semibold" }, /* @__PURE__ */ React.createElement("option", null, "Dalam Proses"), /* @__PURE__ */ React.createElement("option", null, "Selesai"), /* @__PURE__ */ React.createElement("option", null, "Perlu Klarifikasi")), /* @__PURE__ */ React.createElement(Button, { size: "sm", onClick: kirimBalasan }, /* @__PURE__ */ React.createElement(ReplyIcon, { size: 14 }), " Balas")), /* @__PURE__ */ React.createElement("button", { onClick: () => {
+    if (t && confirm(`Hapus ${t.kode}?`)) {
+      deleteTicket(t.kode);
+      setActive(null);
+      refresh();
+    }
+  }, className: "inline-flex cursor-pointer items-center gap-1 text-xs font-bold text-rose-600 hover:underline" }, /* @__PURE__ */ React.createElement(Trash2, { size: 13 }), " Hapus tiket"), /* @__PURE__ */ React.createElement("p", { className: "rounded-xl bg-emerald-50 px-3 py-2 text-[11px] text-emerald-700 ring-1 ring-emerald-200" }, "Ringkasan otomatis ter-publish ke tabel publik saat status Selesai."))) : /* @__PURE__ */ React.createElement(motion.div, { key: "none", initial: { opacity: 0 }, animate: { opacity: 1 } }, /* @__PURE__ */ React.createElement(Empty, { title: "Pilih tiket di antrean", desc: "Klik salah satu tiket untuk membaca detail & memberi balasan." })))));
+}
+export default function Admin() {
+  const nav = useNavigate();
+  const [tab, setTab] = useState("konsultasi");
+  const session = getAdminSession();
+  const isAdmin = session?.role === "admin";
+  useEffect(() => {
+    if (!getAdminSession()) nav("/admin/login");
+  }, [nav]);
+  const tabs = [];
+  return /* @__PURE__ */ React.createElement("main", { className: "mx-auto max-w-6xl px-4 py-10" }, /* @__PURE__ */ React.createElement(Reveal, null, /* @__PURE__ */ React.createElement("div", { className: "flex flex-wrap items-center justify-between gap-3" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("h1", { className: "text-2xl font-extrabold tracking-tight text-slate-900" }, "Dashboard ", isAdmin ? "Admin" : "Operator"), /* @__PURE__ */ React.createElement("p", { className: "text-sm text-slate-500" }, "Halo, ", session?.nama || session?.email, " \u{1F44B}")), /* @__PURE__ */ React.createElement(Button, { variant: "ghost", size: "sm", onClick: () => {
+    clearAdminSession();
+    nav("/");
+  } }, /* @__PURE__ */ React.createElement(LogOut, { size: 14 }), " Keluar"))), /* @__PURE__ */ React.createElement("div", { className: "mt-5 flex flex-wrap gap-2" }, tabs.filter((t) => !t.admin || isAdmin).map((t) => /* @__PURE__ */ React.createElement("button", { key: t.id, onClick: () => setTab(t.id), className: `inline-flex cursor-pointer items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold ring-1 transition ${tab === t.id ? "bg-slate-900 text-white ring-slate-900" : "bg-white text-slate-600 ring-slate-200 hover:bg-slate-50"}` }, /* @__PURE__ */ React.createElement(t.icon, { size: 14 }), " ", t.label))), /* @__PURE__ */ React.createElement("div", { className: "mt-4" }, /* @__PURE__ */ React.createElement(AnimatePresence, { mode: "wait" }, /* @__PURE__ */ React.createElement(motion.div, { key: tab, initial: { opacity: 0, y: 12 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0, y: -8 }, transition: { duration: 0.25 } }, tab === "konsultasi" && /* @__PURE__ */ React.createElement(KonsultasiTab, null), tab === "pengguna" && (isAdmin ? /* @__PURE__ */ React.createElement(UsersTab, null) : /* @__PURE__ */ React.createElement(Empty, { title: "Akses ditolak", desc: "Hanya admin yang dapat mengelola pengguna." })), tab === "pengaturan" && (isAdmin ? /* @__PURE__ */ React.createElement(SettingsTab, null) : /* @__PURE__ */ React.createElement(Empty, { title: "Akses ditolak", desc: "Hanya admin yang dapat mengubah pengaturan." })), tab === "dokumen" && (isAdmin ? /* @__PURE__ */ React.createElement(DocsTab, null) : /* @__PURE__ */ React.createElement(Empty, { title: "Akses ditolak", desc: "Hanya admin yang dapat mengelola dokumen." }))))));
+}

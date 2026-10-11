@@ -1,11 +1,13 @@
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import logoLKPP from "../assets/logo/Logo_1b.png";
 import logoSimeulue from "../assets/logo/LOGO_KABUPATEN_SIMEULUE.png";
 import logoSirup from "../assets/logo/logo-header-latihan.png";
 import logoSPSE from "../assets/logo/logo-spse.svg";
-import { DEFAULT_SETTINGS, loadSettings } from "../lib/store";
+import { DEFAULT_SETTINGS } from "../lib/store";
+import { getSettings } from "../lib/api";
 import { LAYANAN } from "../types";
 
 const NAV = [
@@ -22,6 +24,12 @@ const TAUTAN = [
 ];
 
 export default function Footer() {
+  const [jamLayanan, setJamLayanan] = useState(DEFAULT_SETTINGS.jamLayanan);
+  useEffect(() => {
+    let on = true;
+    getSettings().then((s) => { if (on) setJamLayanan(s.jamLayanan || DEFAULT_SETTINGS.jamLayanan); }).catch(() => {});
+    return () => { on = false; };
+  }, []);
   return (
     <motion.footer initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="mt-14 border-t border-slate-200 bg-white">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-2 md:grid-cols-4">
@@ -57,7 +65,7 @@ export default function Footer() {
             ))}
           </ul>
           <p className="mt-4 text-sm font-bold text-slate-800">Jam Layanan</p>
-          <p className="mt-1 text-xs text-slate-500">{loadSettings().jamLayanan || DEFAULT_SETTINGS.jamLayanan}</p>
+          <p className="mt-1 text-xs text-slate-500">{jamLayanan}</p>
         </div>
       </div>
       <div className="mx-auto max-w-6xl px-4 pb-8">

@@ -39,6 +39,8 @@ export interface Ticket {
   pertanyaan: string;
   bentuk: BentukKonsultasi;
   fileName?: string;
+  /** ID file di Google Drive (kolom file_drive_id) — untuk link unduh/lihat */
+  fileDriveId?: string;
   status: StatusTiket;
   jawaban: Reply[];
   ringkasan?: string;
